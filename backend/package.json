@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "seed": "node admin-seeder.js"
+    "seed": "echo \"Seeding now runs automatically on backend start via tools/startup-seed.js\" && exit 0"
   },
   "author": "Krish Jotaniya",
   "license": "ISC",

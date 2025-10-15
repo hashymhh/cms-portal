@@ -49,7 +49,7 @@ REACT_APP_APILINK=http://localhost:4000/api
 REACT_APP_MEDIA_LINK=http://localhost:4000/media
 ```
 
-Create actual `.env` files (or let `run-dev.ps1` copy them for you):
+Create actual `.env` files:
 ```powershell
 Copy-Item backend/.env.example backend/.env
 Copy-Item frontend/.env.example frontend/.env
@@ -59,15 +59,7 @@ If you want persistent data, start your local MongoDB service before running the
 
 ---
 ## 4. Seeding Data
-There are two seed mechanisms:
-- `admin-seeder.js` (script via `npm run seed`) – creates only the initial admin if missing.
-- `tools/startup-seed.js` – runs automatically on server start and creates: admin, branch, subject, faculty, material (idempotent).
-
-So after first install you can optionally run:
-```powershell
-cd backend
-npm run seed   # optional (startup seed will also provision)
-```
+Seeding runs automatically on backend start via `tools/startup-seed.js` (idempotent: admin, branch, subjects, faculty, materials, notices, exams, timetables, students, and marks).
 
 ### Default Seeded Credentials
 | Role | Email | Password |
@@ -89,9 +81,7 @@ The backend will auto-generate an enrollment number and derive the email: `<enro
 
 ---
 ## 5. Run in Development
-Open two terminals OR use the helper script.
-
-Manual method:
+Open two terminals:
 ```powershell
 # Terminal 1 – backend
 cd backend
@@ -105,10 +95,7 @@ Access:
 - Backend health: http://localhost:4000/
 - Frontend app: http://localhost:3000/
 
-Helper script ( launches both ): 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\run-dev.ps1
-```
+ 
 
 ---
 ## 6. Production-Style (Local) Build & Serve
@@ -118,10 +105,7 @@ Build the React frontend and serve it with a simple static server while the back
 cd frontend
 npm run build
 
-# Option A: use provided simple server
-node simple-static-server.js  # serves build on port 3000
-
-# Option B: install a lightweight static server
+# Option: install a lightweight static server
 npm install -g serve
 serve -s build -p 3000
 ```

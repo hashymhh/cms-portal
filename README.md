@@ -2,7 +2,7 @@
 
 [![MERN Stack](https://img.shields.io/badge/Stack-MERN-blue)](https://www.mongodb.com/mern-stack)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Node.js](https://img.shields.io/badge/Node.js-v14+-green)](https://nodejs.org)
+[![Node.js](https://img.shields.io/badge/Node.js-v16+-green)](https://nodejs.org)
 [![React](https://img.shields.io/badge/React-v17+-blue)](https://reactjs.org)
 
 A comprehensive MERN stack-based College Management System that helps manage academic activities, student information, faculty details, and administrative tasks. This system streamlines the management of educational institutions by providing a centralized platform for administrators, faculty, and students.
@@ -54,20 +54,18 @@ A comprehensive MERN stack-based College Management System that helps manage aca
 
 ## Setup Instructions
 
-Project Setup Video Tutorial: https://youtu.be/gw4jh4RHzuo
-
-Sample .env file is added in both backend and frontend, copy that variables and create `.env` in both the folders and then follow below given instructions
+Sample .env files are included in both backend and frontend (as `.env.example`). Copy those variables to create `.env` in both folders and then follow the steps below.
 
 1. Clone the repository:
 
-```bash
+```powershell
 git clone <repository-url>
-cd College-Management-System
+cd College-Management-System-master
 ```
 
 2. Install dependencies:
 
-```bash
+```powershell
 # Install backend dependencies
 cd backend
 npm install
@@ -100,7 +98,7 @@ REACT_APP_MEDIA_LINK = http://localhost:4000/media
 
 5. Start the development servers:
 
-```bash
+```powershell
 # Start backend server (from backend directory)
 npm run dev
 
@@ -108,20 +106,9 @@ npm run dev
 npm start
 ```
 
-## Initial Setup
+## Seed Data
 
-1. Create an admin account using the seeder:
-
-```bash
-cd backend
-npm run seed
-```
-
-This will create a default admin account with the following credentials:
-
-- Employee ID: 123456
-- Password: admin123
-- Email: admin@gmail.com
+The backend automatically seeds core data at startup (admin, branch, subjects, faculty, materials, notices, exams, timetables, and marks). Admin login: admin@gmail.com / admin123. Students are not auto-created; you can add them via the API.
 
 ## Project Structure
 

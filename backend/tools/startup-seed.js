@@ -91,7 +91,61 @@ const seedInitialData = async () => {
       console.log('Startup seed: Faculty exists');
     }
 
-    // Create sample coordinators
+    // Add two more sample faculty
+    let faculty2 = await Faculty.findOne({ email: 'fatima.faculty@example.com' });
+    if (!faculty2) {
+      faculty2 = await Faculty.create({
+        employeeId: 888888,
+        firstName: 'Fatima',
+        lastName: 'Shah',
+        email: 'fatima.faculty@example.com',
+        phone: '8888888888',
+        profile: 'Faculty_Profile_123456.jpg',
+        address: 'Faculty Street',
+        city: 'City',
+        state: 'State',
+        pincode: '123456',
+        country: 'Pakistan',
+        gender: 'female',
+        dob: new Date('1982-05-10'),
+        designation: 'Senior Lecturer',
+        joiningDate: new Date(),
+        salary: 20000,
+        status: 'active',
+        emergencyContact: { name: 'EC', relationship: 'Spouse', phone: '8888888899' },
+        branchId: branch._id,
+        password: 'faculty123'
+      });
+      console.log('Startup seed: Faculty2 created');
+    }
+    let faculty3 = await Faculty.findOne({ email: 'zeeshan.faculty@example.com' });
+    if (!faculty3) {
+      faculty3 = await Faculty.create({
+        employeeId: 777777,
+        firstName: 'Zeeshan',
+        lastName: 'Khan',
+        email: 'zeeshan.faculty@example.com',
+        phone: '7777777777',
+        profile: 'Faculty_Profile_123456.jpg',
+        address: 'Faculty Avenue',
+        city: 'City',
+        state: 'State',
+        pincode: '123456',
+        country: 'Pakistan',
+        gender: 'male',
+        dob: new Date('1980-09-20'),
+        designation: 'Assistant Professor',
+        joiningDate: new Date(),
+        salary: 25000,
+        status: 'active',
+        emergencyContact: { name: 'EC', relationship: 'Spouse', phone: '7777777799' },
+        branchId: branch._id,
+        password: 'faculty123'
+      });
+      console.log('Startup seed: Faculty3 created');
+    }
+
+  // Create sample coordinators
     let coordinator = await coordinatorDetails.findOne({ email: 'coordinator@example.com' });
     if (!coordinator) {
       coordinator = await coordinatorDetails.create({
@@ -128,6 +182,66 @@ const seedInitialData = async () => {
       console.log('Startup seed: Coordinator created');
     } else {
       console.log('Startup seed: Coordinator exists');
+    }
+
+    // Additional coordinators for other types
+    const extraCoordinators = [
+      {
+        employeeId: 555556,
+        firstName: 'Sara', lastName: 'Exam',
+        email: 'exam.coordinator@example.com', phone: '5555555556',
+        coordinatorType: 'exam',
+        permissions: {
+          canManageTimetables: false,
+          canManageExams: true,
+          canManageNotices: true,
+          canManageMaterials: false,
+          canViewReports: true,
+        }
+      },
+      {
+        employeeId: 555557,
+        firstName: 'Zeeshan', lastName: 'Placement',
+        email: 'placement.coordinator@example.com', phone: '5555555557',
+        coordinatorType: 'placement',
+        permissions: {
+          canManageTimetables: false,
+          canManageExams: false,
+          canManageNotices: true,
+          canManageMaterials: true,
+          canViewReports: true,
+        }
+      },
+      {
+        employeeId: 555558,
+        firstName: 'Nadia', lastName: 'Event',
+        email: 'event.coordinator@example.com', phone: '5555555558',
+        coordinatorType: 'event',
+        permissions: {
+          canManageTimetables: true,
+          canManageExams: false,
+          canManageNotices: true,
+          canManageMaterials: true,
+          canViewReports: false,
+        }
+      }
+    ];
+    for (const ec of extraCoordinators) {
+      const exists = await coordinatorDetails.findOne({ email: ec.email });
+      if (!exists) {
+        await coordinatorDetails.create({
+          employeeId: ec.employeeId,
+          firstName: ec.firstName,
+          lastName: ec.lastName,
+          email: ec.email,
+          phone: ec.phone,
+          profile: 'Faculty_Profile_123456.jpg',
+          address: '123 College Street', city: 'College City', state: 'State', pincode: '123456', country: 'Pakistan',
+          gender: 'female', dob: new Date('1988-01-01'), designation: 'Coordinator', joiningDate: new Date(), salary: 30000,
+          status: 'active', branchId: branch._id, coordinatorType: ec.coordinatorType, permissions: ec.permissions,
+          emergencyContact: { name: 'EC', relationship: 'Spouse', phone: '5555555599' }, bloodGroup: 'B+', password: 'coordinator123'
+        });
+      }
     }
 
     // --- SHOWCASE DATA: Pakistani Students, Timetable, Exams, Marks, Materials, Notices ---
@@ -217,14 +331,14 @@ const seedInitialData = async () => {
     );
     const createdStudents = await Student.insertMany(pakStudents);
 
-    // Create Additional Subjects for Different Semesters
+  // Create Additional Subjects for Different Semesters
     const subjects = [];
     const subjectData = [
       { name: 'Programming Fundamentals', code: 'CSE101', semester: 1, credits: 4 },
       { name: 'Mathematics I', code: 'MATH101', semester: 1, credits: 3 },
       { name: 'Physics', code: 'PHY101', semester: 1, credits: 3 },
       { name: 'English Composition', code: 'ENG101', semester: 1, credits: 2 },
-      { name: 'Islamic Studies', code: 'ISL101', semester: 1, credits: 2 },
+  { name: 'Islamic Studies', code: 'ISL101', semester: 1, credits: 2 },
       
       { name: 'Data Structures', code: 'CSE201', semester: 3, credits: 4 },
       { name: 'Database Systems', code: 'CSE202', semester: 3, credits: 4 },
@@ -250,7 +364,7 @@ const seedInitialData = async () => {
       }
     }
 
-    // Timetable samples for multiple semesters
+  // Timetable samples for multiple semesters
     await Timetable.deleteMany({ branch: branch._id });
     const timetables = [
       {
@@ -273,7 +387,7 @@ const seedInitialData = async () => {
 
     // Multiple Exams for different semesters and types
     await Exam.deleteMany({});
-    const exams = [
+  const exams = [
       // Semester 1 Exams
       {
         name: 'Mid Term Examination - Programming Fundamentals',
@@ -334,6 +448,40 @@ const seedInitialData = async () => {
         examType: 'mid',
         timetableLink: 'https://www.africau.edu/images/default/sample.pdf',
         totalMarks: 60
+      },
+      // Semester 2 Exams
+      {
+        name: 'Mid Term Examination - Discrete Mathematics',
+        date: new Date('2025-10-18'),
+        semester: 2,
+        examType: 'mid',
+        timetableLink: 'https://www.africau.edu/images/default/sample.pdf',
+        totalMarks: 50
+      },
+      {
+        name: 'Final Term Examination - Digital Logic Design',
+        date: new Date('2025-12-20'),
+        semester: 2,
+        examType: 'end',
+        timetableLink: 'https://www.africau.edu/images/default/sample.pdf',
+        totalMarks: 100
+      },
+      // Semester 4 Exams
+      {
+        name: 'Mid Term Examination - Operating Systems',
+        date: new Date('2025-11-05'),
+        semester: 4,
+        examType: 'mid',
+        timetableLink: 'https://www.africau.edu/images/default/sample.pdf',
+        totalMarks: 50
+      },
+      {
+        name: 'Final Term Examination - Computer Networks',
+        date: new Date('2025-12-12'),
+        semester: 4,
+        examType: 'end',
+        timetableLink: 'https://www.africau.edu/images/default/sample.pdf',
+        totalMarks: 100
       }
     ];
     const createdExams = await Exam.insertMany(exams);
@@ -527,7 +675,7 @@ const seedInitialData = async () => {
       // Islamic Studies Materials (Multiple per subject)
       {
         title: 'Islamic Studies - History and Principles',
-        subject: subjects.find(s => s.code === 'IS101')?._id,
+        subject: subjects.find(s => s.code === 'ISL101')?._id,
         faculty: faculty._id,
         semester: 1,
         branch: branch._id,
@@ -536,7 +684,7 @@ const seedInitialData = async () => {
       },
       {
         title: 'Islamic Studies Assignment - Comparative Study',
-        subject: subjects.find(s => s.code === 'IS101')?._id,
+        subject: subjects.find(s => s.code === 'ISL101')?._id,
         faculty: faculty._id,
         semester: 1,
         branch: branch._id,
@@ -545,7 +693,7 @@ const seedInitialData = async () => {
       },
       {
         title: 'Islamic Studies Course Syllabus',
-        subject: subjects.find(s => s.code === 'IS101')?._id,
+        subject: subjects.find(s => s.code === 'ISL101')?._id,
         faculty: faculty._id,
         semester: 1,
         branch: branch._id,
@@ -554,7 +702,7 @@ const seedInitialData = async () => {
       },
       {
         title: 'Islamic Ethics and Morals Reference',
-        subject: subjects.find(s => s.code === 'IS101')?._id,
+        subject: subjects.find(s => s.code === 'ISL101')?._id,
         faculty: faculty._id,
         semester: 1,
         branch: branch._id,
@@ -764,61 +912,7 @@ const seedInitialData = async () => {
       },
       {
         title: 'ML Project - Predictive Model Assignment',
-        subject: subjects.find(s => s.code === 'CSE302')?._id,
-        faculty: faculty._id,
-        semester: 5,
-        branch: branch._id,
-        type: 'assignment',
-        file: '1759557616515.jpg'
-      },
-      {
-        title: 'Machine Learning Course Syllabus',
-        subject: subjects.find(s => s.code === 'CSE302')?._id,
-        faculty: faculty._id,
-        semester: 5,
-        branch: branch._id,
-        type: 'syllabus',
-        file: '1759560454545.jpg'
-      },
-      {
-        title: 'Deep Learning Frameworks Comparison',
-        subject: subjects.find(s => s.code === 'CSE302')?._id,
-        faculty: faculty._id,
-        semester: 5,
-        branch: branch._id,
-        type: 'other',
-        file: '1759597197642.jpg'
-      },
-
-      // Network Security Materials (Semester 5) - Multiple per subject
-      {
-        title: 'Network Security - Threats and Countermeasures',
-        subject: subjects.find(s => s.code === 'CSE303')?._id,
-        faculty: faculty._id,
-        semester: 5,
-        branch: branch._id,
-        type: 'notes',
-        file: '1759597905991.jpg'
-      },
-      {
-        title: 'Cryptography Implementation Assignment',
-        subject: subjects.find(s => s.code === 'CSE303')?._id,
-        faculty: faculty._id,
-        semester: 5,
-        branch: branch._id,
-        type: 'assignment',
-        file: '1759599654974.jpg'
-      },
-      {
-        title: 'Network Security Syllabus',
-        subject: subjects.find(s => s.code === 'CSE303')?._id,
-        faculty: faculty._id,
-        semester: 5,
-        branch: branch._id,
-        type: 'syllabus',
-        file: '1759736468300.jpg'
-      },
-      {
+        subject: subjects.find(s => s.code === 'CSE
         title: 'Ethical Hacking Guidelines',
         subject: subjects.find(s => s.code === 'CSE303')?._id,
         faculty: faculty._id,
