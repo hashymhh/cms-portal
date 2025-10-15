@@ -65,7 +65,7 @@ const Home = () => {
     const pathMenuId = urlParams.get("page") || "home";
     const validMenu = MENU_ITEMS.find((item) => item.id === pathMenuId);
     setSelectedMenu(validMenu ? validMenu.id : "home");
-  }, [location.pathname]);
+  }, [location.search]);
 
   const getMenuItemClass = (menuId) => {
     const isSelected = selectedMenu === menuId;
@@ -83,18 +83,34 @@ const Home = () => {
   };
 
   const renderContent = () => {
-    if (isLoading) {
-      return (
-        <div className="flex justify-center items-center h-64">Loading...</div>
-      );
+    try {
+      if (isLoading) {
+        return (
+          <div className="flex justify-center items-center h-64">Loading...</div>
+        );
+      }
+      
+      // Special handling for home/profile page
+      if (selectedMenu === "home") {
+        if (!profileData) {
+          return <div className="flex justify-center items-center h-64">Loading profile...</div>;
+        }
+        return <Profile profileData={profileData} />;
+      }
+      
+      // Render other menu items
+      const menuItem = MENU_ITEMS.find((item) => item.id === selectedMenu);
+      if (!menuItem) {
+        console.error("Menu item not found:", selectedMenu);
+        return <div className="text-center text-red-500 p-4">Menu item not found: {selectedMenu}</div>;
+      }
+      const MenuItem = menuItem.component;
+      console.log("Rendering menu item:", selectedMenu, MenuItem);
+      return <MenuItem />;
+    } catch (error) {
+      console.error("Error rendering content:", error);
+      return <div className="text-center text-red-500 p-4">Error: {error.message}</div>;
     }
-    if (selectedMenu === "home" && profileData) {
-      return <Profile profileData={profileData} />;
-    }
-    const MenuItem = MENU_ITEMS.find(
-      (item) => item.id === selectedMenu
-    )?.component;
-    return MenuItem && <MenuItem />;
   };
 
   const handleMenuClick = (menuId) => {

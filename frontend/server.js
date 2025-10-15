@@ -10,7 +10,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-const port = 3001;
+const port = 3000;
 app.listen(port, () => {
   console.log(`Frontend server running on http://localhost:${port}`);
   console.log('Keep this window open to keep the frontend running!');

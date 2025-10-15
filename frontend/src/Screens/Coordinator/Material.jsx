@@ -21,14 +21,20 @@ const Material = () => {
       }
       
       const response = await axiosWrapper.get(url);
-      if (response.data.success) {
-        setMaterials(response.data.message || []);
+      if (response.data?.success) {
+        const items = response.data?.data;
+        setMaterials(Array.isArray(items) ? items : []);
       } else {
-        toast.error(response.data.message || "Failed to fetch materials");
+        toast.error(response.data?.message || "Failed to fetch materials");
+        setMaterials([]);
       }
     } catch (error) {
       console.error("Error fetching materials:", error);
-      toast.error("Failed to fetch materials");
+      if (error?.response?.status === 404) {
+        setMaterials([]);
+      } else {
+        toast.error(error?.response?.data?.message || "Failed to fetch materials");
+      }
     } finally {
       setLoading(false);
     }
@@ -51,7 +57,7 @@ const Material = () => {
       notes: <FiBook className="w-5 h-5" />,
       assignment: <FiFileText className="w-5 h-5" />,
       syllabus: <FiArchive className="w-5 h-5" />,
-      video: <FiVideo className="w-5 h-5" />,
+      other: <FiFileText className="w-5 h-5" />,
     };
     return icons[type] || <FiFileText className="w-5 h-5" />;
   };
@@ -61,7 +67,7 @@ const Material = () => {
       notes: "bg-blue-100 text-blue-800",
       assignment: "bg-green-100 text-green-800",
       syllabus: "bg-purple-100 text-purple-800",
-      video: "bg-red-100 text-red-800",
+      other: "bg-gray-100 text-gray-800",
     };
     return colors[type] || "bg-gray-100 text-gray-800";
   };
@@ -76,7 +82,7 @@ const Material = () => {
 
   const handleDownload = (material) => {
     const link = document.createElement('a');
-    link.href = `${process.env.REACT_APP_MEDIA_LINK}/${material.link}`;
+    link.href = `${process.env.REACT_APP_MEDIA_LINK}/${material.file}`;
     link.download = material.title;
     document.body.appendChild(link);
     link.click();
@@ -84,7 +90,7 @@ const Material = () => {
   };
 
   const handleView = (material) => {
-    window.open(`${process.env.REACT_APP_MEDIA_LINK}/${material.link}`, '_blank');
+    window.open(`${process.env.REACT_APP_MEDIA_LINK}/${material.file}`, '_blank');
   };
 
   if (loading) return <Loading />;
@@ -135,7 +141,7 @@ const Material = () => {
         <div>
           <h3 className="text-sm font-medium text-gray-700 mb-2">Filter by Type:</h3>
           <div className="flex flex-wrap gap-2">
-            {['all', 'notes', 'assignment', 'syllabus', 'video'].map((type) => (
+            {['all', 'notes', 'assignment', 'syllabus', 'other'].map((type) => (
               <button
                 key={type}
                 onClick={() => handleTypeChange(type)}
@@ -183,7 +189,7 @@ const Material = () => {
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Subject:</span>
-                    <span className="text-gray-900 font-medium">{material.subjectId?.name || 'N/A'}</span>
+                    <span className="text-gray-900 font-medium">{material.subject?.name || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Uploaded:</span>

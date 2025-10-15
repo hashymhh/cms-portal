@@ -14,14 +14,19 @@ const Timetable = () => {
     setLoading(true);
     try {
       const response = await axiosWrapper.get(`/timetable?semester=${selectedSemester}`);
-      if (response.data.success) {
-        setTimetables(response.data.message || []);
+        if (response.data?.success) {
+          const items = response.data?.data;
+          setTimetables(Array.isArray(items) ? items : []);
       } else {
         toast.error(response.data.message || "Failed to fetch timetables");
       }
     } catch (error) {
       console.error("Error fetching timetables:", error);
-      toast.error("Failed to fetch timetables");
+        if (error?.response?.status === 404) {
+          setTimetables([]);
+        } else {
+          toast.error(error?.response?.data?.message || "Failed to fetch timetables");
+        }
     } finally {
       setLoading(false);
     }
@@ -56,7 +61,7 @@ const Timetable = () => {
       <div key={timetable._id} className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
         <div className="bg-green-600 text-white p-4">
           <h3 className="text-xl font-bold">
-            Semester {timetable.semester} - {timetable.branchId?.name || 'Unknown Branch'}
+            Semester {timetable.semester} - {timetable.branch?.name || timetable.branchId?.name || 'Unknown Branch'}
           </h3>
           <p className="text-green-100">Academic Year: {timetable.academicYear || 'Current'}</p>
         </div>
@@ -79,6 +84,7 @@ const Timetable = () => {
                   <td className="border border-gray-300 p-3 font-medium text-gray-800 bg-gray-50">
                     {day}
                   </td>
+                  {timeSlots.map(timeSlot => renderTimeSlot(timeSlot, timetable.schedule?.[day] || {}))}
                   {timeSlots.map(timeSlot => renderTimeSlot(timeSlot, timetable.schedule?.[day] || {}))}
                 </tr>
               ))}
