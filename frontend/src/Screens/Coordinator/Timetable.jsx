@@ -14,14 +14,24 @@ const Timetable = () => {
     setLoading(true);
     try {
       const response = await axiosWrapper.get(`/timetable?semester=${selectedSemester}`);
-      if (response.data.success) {
-        setTimetables(response.data.message || []);
+      if (response.data?.success) {
+        const payload = response.data?.data;
+        setTimetables(Array.isArray(payload) ? payload : []);
+        if (!Array.isArray(payload)) {
+          console.warn("Timetable API returned non-array payload", payload);
+        }
       } else {
-        toast.error(response.data.message || "Failed to fetch timetables");
+        toast.error(response.data?.message || "Failed to fetch timetables");
+        setTimetables([]);
       }
     } catch (error) {
       console.error("Error fetching timetables:", error);
-      toast.error("Failed to fetch timetables");
+      if (error.response?.status === 404) {
+        // No timetables found for this semester
+        setTimetables([]);
+      } else {
+        toast.error(error.response?.data?.message || "Failed to fetch timetables");
+      }
     } finally {
       setLoading(false);
     }
@@ -49,42 +59,110 @@ const Timetable = () => {
   };
 
   const renderTimetableGrid = (timetable) => {
-    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const timeSlots = ['9:00-10:00', '10:00-11:00', '11:00-12:00', '12:00-1:00', '2:00-3:00', '3:00-4:00', '4:00-5:00'];
+    // Build schedule map from either gridData (preferred) or legacy schedule object
+    const dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    let scheduleMap = {};
+    let derivedDays = [];
+    let timeSlots = [];
+
+    if (timetable.isGrid && Array.isArray(timetable.gridData) && timetable.gridData.length > 0) {
+      // Convert array of entries into { [day]: { [time]: entry } }
+      scheduleMap = timetable.gridData.reduce((acc, entry) => {
+        const day = entry.day;
+        const time = entry.time;
+        if (!acc[day]) acc[day] = {};
+        acc[day][time] = entry;
+        return acc;
+      }, {});
+      // Derive ordered unique days and time slots
+      let uniqueDays = [];
+      let uniqueSlots = [];
+      if (Array.isArray(timetable.gridData)) {
+        uniqueDays = Array.from(new Set(timetable.gridData.map(e => e.day)));
+        uniqueSlots = Array.from(new Set(timetable.gridData.map(e => e.time)));
+      }
+      derivedDays = dayOrder.filter(d => uniqueDays.includes(d));
+      timeSlots = uniqueSlots;
+    } else if (timetable.schedule && typeof timetable.schedule === 'object') {
+      // Legacy shape: timetable.schedule with fixed slots
+      scheduleMap = timetable.schedule || {};
+      derivedDays = dayOrder;
+      timeSlots = ['8:00-9:00', '9:00-10:00', '10:00-11:00', '11:00-12:00', '12:00-1:00', '2:00-3:00', '3:00-4:00', '4:00-5:00'];
+    } else if (timetable.link) {
+      // PDF fallback
+      return (
+        <div key={timetable._id} className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
+          <div className="p-4">
+            <p className="text-sm text-gray-600 mb-2">This timetable is provided as a PDF.</p>
+            <a
+              className="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              href={/^https?:\/\//.test(timetable.link) ? timetable.link : `${process.env.REACT_APP_MEDIA_LINK}/${timetable.link}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View PDF
+            </a>
+          </div>
+        </div>
+      );
+    } else {
+      // No valid timetable data
+      return (
+        <div key={timetable._id} className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
+          <NoData message="No timetable data available." />
+        </div>
+      );
+    }
 
     return (
       <div key={timetable._id} className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
         <div className="bg-green-600 text-white p-4">
           <h3 className="text-xl font-bold">
-            Semester {timetable.semester} - {timetable.branchId?.name || 'Unknown Branch'}
+            Semester {timetable.semester} - {timetable.branch?.name || timetable.branchId?.name || 'Unknown Branch'}
           </h3>
-          <p className="text-green-100">Academic Year: {timetable.academicYear || 'Current'}</p>
+          {timetable.academicYear && (
+            <p className="text-green-100">Academic Year: {timetable.academicYear}</p>
+          )}
         </div>
-        
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-300 p-3 font-semibold text-gray-700">Day/Time</th>
-                {timeSlots.map(slot => (
-                  <th key={slot} className="border border-gray-300 p-3 font-semibold text-gray-700 min-w-[120px]">
-                    {slot}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {days.map(day => (
-                <tr key={day} className="hover:bg-gray-50">
-                  <td className="border border-gray-300 p-3 font-medium text-gray-800 bg-gray-50">
-                    {day}
-                  </td>
-                  {timeSlots.map(timeSlot => renderTimeSlot(timeSlot, timetable.schedule?.[day] || {}))}
+        {/* Grid or PDF fallback */}
+        {Object.keys(scheduleMap).length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="border border-gray-300 p-3 font-semibold text-gray-700">Day/Time</th>
+                  {timeSlots.map(slot => (
+                    <th key={slot} className="border border-gray-300 p-3 font-semibold text-gray-700 min-w-[120px]">
+                      {slot}
+                    </th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {derivedDays.map(day => (
+                  <tr key={day} className="hover:bg-gray-50">
+                    <td className="border border-gray-300 p-3 font-medium text-gray-800 bg-gray-50">
+                      {day}
+                    </td>
+                    {timeSlots.map(timeSlot => renderTimeSlot(timeSlot, scheduleMap[day] || {}))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="p-4">
+            <p className="text-sm text-gray-600 mb-2">This timetable is provided as a PDF.</p>
+            <a
+              className="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              href={/^https?:\/\//.test(timetable.link) ? timetable.link : `${process.env.REACT_APP_MEDIA_LINK}/${timetable.link}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View PDF
+            </a>
+          </div>
+        )}
       </div>
     );
   };
@@ -131,7 +209,7 @@ const Timetable = () => {
       </div>
 
       {/* Timetables */}
-      {timetables.length > 0 ? (
+      {Array.isArray(timetables) && timetables.length > 0 ? (
         <div>
           {timetables.map(timetable => renderTimetableGrid(timetable))}
         </div>

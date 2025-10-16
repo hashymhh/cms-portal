@@ -25,3 +25,35 @@ yarn-error.log*
 
 temp
 backend/media/*
+
+# --- Added by Copilot: Ignore local MongoDB bundle & data ---
+# Don't commit local MongoDB binaries/data (causes permission errors like WiredTiger.lock)
+mongodb-win32-x86_64-windows-8.2.1/
+mongodb-win32-*/
+mongodb-*/
+**/data/WiredTiger*
+**/data/journal/
+**/data/diagnostic.data/
+**/data/*.wt
+**/data/*.ns
+**/data/*.lock
+**/db/*.wt
+**/db/*.lock
+
+# Editor/OS
+.vscode/
+Thumbs.db
+.history/
+
+# Build outputs/caches (frontend/backends)
+**/dist/
+**/build/
+**/.cache/
+**/.tmp/
+coverage/
+
+# Env files
+.env
+.env.*
+backend/.env
+frontend/.env

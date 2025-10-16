@@ -912,7 +912,61 @@ const seedInitialData = async () => {
       },
       {
         title: 'ML Project - Predictive Model Assignment',
-        subject: subjects.find(s => s.code === 'CSE
+        subject: subjects.find(s => s.code === 'CSE302')?._id,
+        faculty: faculty._id,
+        semester: 5,
+        branch: branch._id,
+        type: 'assignment',
+        file: '1759599654974.jpg'
+      },
+      {
+        title: 'Machine Learning Course Syllabus',
+        subject: subjects.find(s => s.code === 'CSE302')?._id,
+        faculty: faculty._id,
+        semester: 5,
+        branch: branch._id,
+        type: 'syllabus',
+        file: '1759736468300.jpg'
+      },
+      {
+        title: 'ML Algorithms Reference Sheet',
+        subject: subjects.find(s => s.code === 'CSE302')?._id,
+        faculty: faculty._id,
+        semester: 5,
+        branch: branch._id,
+        type: 'other',
+        file: '1759740397609.jpg'
+      },
+
+      // Network Security Materials (Semester 5) - Multiple per subject
+      {
+        title: 'Network Security - Notes',
+        subject: subjects.find(s => s.code === 'CSE303')?._id,
+        faculty: faculty._id,
+        semester: 5,
+        branch: branch._id,
+        type: 'notes',
+        file: '1759597197642.jpg'
+      },
+      {
+        title: 'Security Assignment - Cryptography Basics',
+        subject: subjects.find(s => s.code === 'CSE303')?._id,
+        faculty: faculty._id,
+        semester: 5,
+        branch: branch._id,
+        type: 'assignment',
+        file: '1759557616515.jpg'
+      },
+      {
+        title: 'Network Security Syllabus',
+        subject: subjects.find(s => s.code === 'CSE303')?._id,
+        faculty: faculty._id,
+        semester: 5,
+        branch: branch._id,
+        type: 'syllabus',
+        file: '1759560454545.jpg'
+      },
+      {
         title: 'Ethical Hacking Guidelines',
         subject: subjects.find(s => s.code === 'CSE303')?._id,
         faculty: faculty._id,
