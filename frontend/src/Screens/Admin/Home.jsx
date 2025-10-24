@@ -189,8 +189,9 @@ const Home = () => {
       );
     }
 
-    if (selectedMenu === "dashboard" && profileData) {
-      return <Profile profileData={profileData} />;
+    // Show admin dashboard (MVP) when dashboard is selected
+    if (selectedMenu === "dashboard") {
+      return renderDashboard();
     }
 
     const MenuItem = MENU_ITEMS.find(

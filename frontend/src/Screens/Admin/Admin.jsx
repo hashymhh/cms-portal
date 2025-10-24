@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { MdOutlineDelete, MdEdit } from "react-icons/md";
 import { IoMdAdd, IoMdClose } from "react-icons/io";
+import { FiSearch, FiDownload, FiCheckCircle, FiXCircle } from "react-icons/fi";
 import axiosWrapper from "../../utils/AxiosWrapper";
 import Heading from "../../components/Heading";
 import DeleteConfirm from "../../components/DeleteConfirm";
@@ -33,6 +34,18 @@ const Admin = () => {
     bloodGroup: "",
   });
   const [admins, setAdmins] = useState([]);
+  // User Management UI state (sample data driven)
+  const [users, setUsers] = useState([
+    { id: "u1", name: "Dr. Ahmed Khan", email: "ahmed.khan@concordia.edu", role: "Faculty", department: "Computer Science", status: "Active", joinDate: "2022-01-15" },
+    { id: "u2", name: "Fatima Ali", email: "fatima.ali@concordia.edu", role: "Student", department: "Engineering", status: "Active", joinDate: "2023-09-01" },
+    { id: "u3", name: "Hassan Malik", email: "hassan.malik@concordia.edu", role: "Coordinator", department: "Administration", status: "Active", joinDate: "2021-06-10" },
+    { id: "u4", name: "Ayesha Siddiqui", email: "ayesha.siddiqui@concordia.edu", role: "Faculty", department: "Business", status: "Active", joinDate: "2022-03-20" },
+    { id: "u5", name: "Muhammad Hassan", email: "hassan.m@concordia.edu", role: "Student", department: "Computer Science", status: "Inactive", joinDate: "2023-09-01" },
+    { id: "u6", name: "Zainab Ahmed", email: "zainab.ahmed@concordia.edu", role: "Faculty", department: "Mathematics", status: "Active", joinDate: "2021-08-15" },
+    { id: "u7", name: "Ali Raza", email: "ali.raza@concordia.edu", role: "Student", department: "Engineering", status: "Active", joinDate: "2023-09-01" },
+  ]);
+  const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState("All Roles");
   const [showAddForm, setShowAddForm] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [selectedAdminId, setSelectedAdminId] = useState(null);
@@ -40,6 +53,7 @@ const Admin = () => {
   const userToken = localStorage.getItem("userToken");
   const [file, setFile] = useState(null);
   const [dataLoading, setDataLoading] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
   useEffect(() => {
     getAdminsHandler();
@@ -68,6 +82,55 @@ const Admin = () => {
     } finally {
       setDataLoading(false);
     }
+  };
+
+  // Derived list for User Management table
+  const filteredUsers = users.filter((u) => {
+    const s = search.trim().toLowerCase();
+    const matchesSearch = !s || u.name.toLowerCase().includes(s) || u.email.toLowerCase().includes(s);
+    const matchesRole = roleFilter === "All Roles" || u.role === roleFilter;
+    return matchesSearch && matchesRole;
+  });
+
+  const exportCsv = () => {
+    const header = ["Name", "Email", "Role", "Department", "Status", "Join Date"];
+    const rows = filteredUsers.map((u) => [u.name, u.email, u.role, u.department, u.status, u.joinDate]);
+    const csv = [header.join(","), ...rows.map((r) => r.map((x) => `"${String(x).replace(/"/g,'""')}"`).join(","))].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "users.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleAddUser = (e) => {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    const newUser = {
+      id: `u_${Date.now()}`,
+      name: form.get("name") || "",
+      email: form.get("email") || "",
+      role: form.get("role") || "Student",
+      department: form.get("department") || "",
+      status: form.get("status") || "Active",
+      joinDate: form.get("joinDate") || new Date().toISOString().slice(0, 10),
+    };
+    setUsers((prev) => [newUser, ...prev]);
+    setShowAddForm(false);
+    toast.success("User added (local)");
+  };
+
+  const requestDeleteUser = (id) => {
+    setIsDeleteConfirmOpen(true);
+    setSelectedUserId(id);
+  };
+
+  const confirmDeleteUser = () => {
+    setUsers((prev) => prev.filter((u) => u.id !== selectedUserId));
+    setIsDeleteConfirmOpen(false);
+    toast.success("User deleted (local)");
   };
 
   const addAdminHandler = async () => {
@@ -233,421 +296,165 @@ const Admin = () => {
 
   return (
     <div className="w-full mx-auto mt-10 flex justify-center items-start flex-col mb-10 relative">
-      <div className="flex justify-between items-center w-full">
-        <Heading title="Admin Management" />
-        <CustomButton
-          onClick={() => {
-            if (showAddForm) {
-              resetForm();
-            } else {
-              setShowAddForm(true);
-            }
-          }}
-        >
-          <IoMdAdd className="text-2xl" />
+      {/* Header */}
+      <div className="w-full flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800">User Management</h2>
+          <p className="text-sm text-gray-500 mt-1">Manage faculty, students, and coordinators</p>
+        </div>
+        <CustomButton onClick={() => setShowAddForm(true)} className="!rounded-lg !px-4 !py-2 flex items-center gap-2">
+          <IoMdAdd className="text-xl" />
+          <span className="hidden sm:inline">Add User</span>
         </CustomButton>
       </div>
 
+      {/* Controls */}
+      <div className="w-full mt-4 flex items-center gap-3 flex-wrap">
+        <div className="relative">
+          <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search by name or email..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-10 pr-4 py-2 rounded-lg border bg-white outline-none text-sm w-80"
+          />
+        </div>
+        <select
+          className="px-3 py-2 rounded-lg border bg-white text-sm"
+          value={roleFilter}
+          onChange={(e) => setRoleFilter(e.target.value)}
+        >
+          <option>All Roles</option>
+          <option>Student</option>
+          <option>Faculty</option>
+          <option>Coordinator</option>
+          <option>Admin</option>
+        </select>
+        <div className="ml-auto">
+          <CustomButton onClick={exportCsv} className="!px-4 !py-2 flex items-center gap-2">
+            <FiDownload />
+            <span>Export</span>
+          </CustomButton>
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="mt-4 w-full">
+        <div className="bg-white rounded-lg shadow overflow-x-auto">
+          <table className="text-sm min-w-full">
+            <thead>
+              <tr className="bg-[#ff7a00] text-white">
+                <th className="py-3 px-4 text-left font-semibold">Name</th>
+                <th className="py-3 px-4 text-left font-semibold">Email</th>
+                <th className="py-3 px-4 text-left font-semibold">Role</th>
+                <th className="py-3 px-4 text-left font-semibold">Department</th>
+                <th className="py-3 px-4 text-left font-semibold">Status</th>
+                <th className="py-3 px-4 text-left font-semibold">Join Date</th>
+                <th className="py-3 px-4 text-center font-semibold">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredUsers.length > 0 ? (
+                filteredUsers.map((u) => (
+                  <tr key={u.id} className="border-b hover:bg-orange-50">
+                    <td className="py-3 px-4">{u.name}</td>
+                    <td className="py-3 px-4 text-[#2563eb]">{u.email}</td>
+                    <td className="py-3 px-4">
+                      <span className="px-2 py-1 rounded-full text-xs bg-orange-100 text-orange-700">{u.role}</span>
+                    </td>
+                    <td className="py-3 px-4">{u.department}</td>
+                    <td className="py-3 px-4">
+                      {u.status === "Active" ? (
+                        <span className="inline-flex items-center gap-1 text-green-600">
+                          <FiCheckCircle /> Active
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-red-600">
+                          <FiXCircle /> Inactive
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-3 px-4">{u.joinDate}</td>
+                    <td className="py-3 px-4 text-center">
+                      <div className="inline-flex items-center gap-2">
+                        <CustomButton variant="secondary" className="!p-2" onClick={() => toast("Edit coming soon") }>
+                          <MdEdit />
+                        </CustomButton>
+                        <CustomButton variant="danger" className="!p-2" onClick={() => requestDeleteUser(u.id)}>
+                          <MdOutlineDelete />
+                        </CustomButton>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="7" className="text-center text-base py-8">No users found.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Add User Modal */}
       {showAddForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 w-[90%] max-w-4xl max-h-[90vh] overflow-y-auto relative">
-            <button
-              onClick={resetForm}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100 transition-colors"
-            >
+          <div className="bg-white rounded-lg p-6 w-[95%] max-w-2xl relative">
+            <button onClick={() => setShowAddForm(false)} className="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
               <IoMdClose className="text-2xl" />
             </button>
-            <h2 className="text-2xl font-semibold mb-6">
-              {isEditing ? "Edit Admin" : "Add New Admin"}
-            </h2>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                addAdminHandler();
-              }}
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Profile Photo
-                  </label>
-                  <input
-                    type="file"
-                    onChange={(e) => setFile(e.target.files[0])}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    accept="image/*"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    value={data.firstName}
-                    onChange={(e) =>
-                      handleInputChange("firstName", e.target.value)
-                    }
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    value={data.lastName}
-                    onChange={(e) =>
-                      handleInputChange("lastName", e.target.value)
-                    }
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    value={data.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Phone
-                  </label>
-                  <input
-                    type="tel"
-                    value={data.phone}
-                    onChange={(e) => handleInputChange("phone", e.target.value)}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Gender
-                  </label>
-                  <select
-                    value={data.gender}
-                    onChange={(e) =>
-                      handleInputChange("gender", e.target.value)
-                    }
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  >
-                    <option value="">Select Gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Date of Birth
-                  </label>
-                  <input
-                    type="date"
-                    value={data.dob}
-                    onChange={(e) => handleInputChange("dob", e.target.value)}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Blood Group
-                  </label>
-                  <select
-                    value={data.bloodGroup}
-                    onChange={(e) =>
-                      handleInputChange("bloodGroup", e.target.value)
-                    }
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  >
-                    <option value="">Select Blood Group</option>
-                    <option value="A+">A+</option>
-                    <option value="A-">A-</option>
-                    <option value="B+">B+</option>
-                    <option value="B-">B-</option>
-                    <option value="AB+">AB+</option>
-                    <option value="AB-">AB-</option>
-                    <option value="O+">O+</option>
-                    <option value="O-">O-</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Designation
-                  </label>
-                  <input
-                    type="text"
-                    value={data.designation}
-                    onChange={(e) =>
-                      handleInputChange("designation", e.target.value)
-                    }
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Joining Date
-                  </label>
-                  <input
-                    type="date"
-                    value={data.joiningDate}
-                    onChange={(e) =>
-                      handleInputChange("joiningDate", e.target.value)
-                    }
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Salary
-                  </label>
-                  <input
-                    type="number"
-                    value={data.salary}
-                    onChange={(e) =>
-                      handleInputChange("salary", e.target.value)
-                    }
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Address
-                  </label>
-                  <input
-                    type="text"
-                    value={data.address}
-                    onChange={(e) =>
-                      handleInputChange("address", e.target.value)
-                    }
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    City
-                  </label>
-                  <input
-                    type="text"
-                    value={data.city}
-                    onChange={(e) => handleInputChange("city", e.target.value)}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    State
-                  </label>
-                  <input
-                    type="text"
-                    value={data.state}
-                    onChange={(e) => handleInputChange("state", e.target.value)}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Pincode
-                  </label>
-                  <input
-                    type="text"
-                    value={data.pincode}
-                    onChange={(e) =>
-                      handleInputChange("pincode", e.target.value)
-                    }
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Country
-                  </label>
-                  <input
-                    type="text"
-                    value={data.country}
-                    onChange={(e) =>
-                      handleInputChange("country", e.target.value)
-                    }
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <h3 className="text-lg font-semibold mb-4">
-                    Emergency Contact
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Name
-                      </label>
-                      <input
-                        type="text"
-                        value={data.emergencyContact.name}
-                        onChange={(e) =>
-                          handleEmergencyContactChange("name", e.target.value)
-                        }
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Relationship
-                      </label>
-                      <input
-                        type="text"
-                        value={data.emergencyContact.relationship}
-                        onChange={(e) =>
-                          handleEmergencyContactChange(
-                            "relationship",
-                            e.target.value
-                          )
-                        }
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Phone
-                      </label>
-                      <input
-                        type="tel"
-                        value={data.emergencyContact.phone}
-                        onChange={(e) =>
-                          handleEmergencyContactChange("phone", e.target.value)
-                        }
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
+            <h2 className="text-xl font-semibold mb-4">Add User</h2>
+            <form onSubmit={handleAddUser} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <input name="name" type="text" className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff7a00]" required />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input name="email" type="email" className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff7a00]" required />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                <select name="role" className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff7a00]">
+                  <option>Student</option>
+                  <option>Faculty</option>
+                  <option>Coordinator</option>
+                  <option>Admin</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                <input name="department" type="text" className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff7a00]" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select name="status" className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff7a00]">
+                  <option>Active</option>
+                  <option>Inactive</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Join Date</label>
+                <input name="joinDate" type="date" className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff7a00]" />
               </div>
 
-              <div className="mt-8 flex justify-between items-center gap-4">
-                <div>
-                  <p className="text-sm">
-                    Default password will be{" "}
-                    <span className="font-bold">admin123</span>
-                  </p>
-                </div>
-                <div className="flex gap-4">
-                  <CustomButton
-                    type="button"
-                    variant="secondary"
-                    onClick={resetForm}
-                  >
-                    Cancel
-                  </CustomButton>
-                  <CustomButton type="submit" variant="primary">
-                    {isEditing ? "Update Admin" : "Add Admin"}
-                  </CustomButton>
-                </div>
+              <div className="md:col-span-2 flex justify-end gap-3 mt-2">
+                <CustomButton variant="secondary" type="button" onClick={() => setShowAddForm(false)}>Cancel</CustomButton>
+                <CustomButton variant="primary" type="submit">Add</CustomButton>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {dataLoading && <Loading />}
-
-      {!dataLoading && !showAddForm && (
-        <div className="mt-8 w-full">
-          <table className="text-sm min-w-full bg-white">
-            <thead>
-              <tr className="bg-blue-500 text-white">
-                <th className="py-4 px-6 text-left font-semibold">Name</th>
-                <th className="py-4 px-6 text-left font-semibold">Email</th>
-                <th className="py-4 px-6 text-left font-semibold">Phone</th>
-                <th className="py-4 px-6 text-left font-semibold">
-                  Employee ID
-                </th>
-                <th className="py-4 px-6 text-left font-semibold">
-                  Designation
-                </th>
-                <th className="py-4 px-6 text-center font-semibold">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {admins && admins.length > 0 ? (
-                admins.map((item, index) => (
-                  <tr key={index} className="border-b hover:bg-blue-50">
-                    <td className="py-4 px-6">{`${item.firstName} ${item.lastName}`}</td>
-                    <td className="py-4 px-6">{item.email}</td>
-                    <td className="py-4 px-6">{item.phone}</td>
-                    <td className="py-4 px-6">{item.employeeId}</td>
-                    <td className="py-4 px-6">{item.designation}</td>
-                    <td className="py-4 px-6 text-center flex justify-center gap-4">
-                      <CustomButton
-                        variant="secondary"
-                        onClick={() => editAdminHandler(item)}
-                      >
-                        <MdEdit />
-                      </CustomButton>
-                      <CustomButton
-                        variant="danger"
-                        onClick={() => deleteAdminHandler(item._id)}
-                      >
-                        <MdOutlineDelete />
-                      </CustomButton>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="6" className="text-center text-base pt-10">
-                    No Admins found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
+      {/* Delete confirm */}
       <DeleteConfirm
         isOpen={isDeleteConfirmOpen}
         onClose={() => setIsDeleteConfirmOpen(false)}
-        onConfirm={confirmDelete}
-        message="Are you sure you want to delete this admin?"
+        onConfirm={confirmDeleteUser}
+        message="Are you sure you want to delete this user?"
       />
     </div>
   );
