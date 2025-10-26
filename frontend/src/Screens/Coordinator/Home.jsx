@@ -707,7 +707,7 @@ const Home = () => {
   };
 
   const handleViewReports = () => {
-    toast.info("Reports feature coming soon");
+    toast("Reports feature coming soon", { icon: "ℹ️" });
   };
 
   // Attendance Management handlers
@@ -770,7 +770,7 @@ const Home = () => {
   };
 
   const handleSummaryReport = () => {
-    toast.info("Generating summary report...");
+    toast("Generating summary report...", { icon: "ℹ️" });
     // Summary report logic
   };
 
@@ -780,7 +780,7 @@ const Home = () => {
   };
 
   const handleEditMarks = (subjectId) => {
-    toast.info(`Editing marks for subject ID: ${subjectId}`);
+    toast(`Editing marks for subject ID: ${subjectId}`, { icon: "ℹ️" });
     // Edit marks logic
   };
 
@@ -791,12 +791,12 @@ const Home = () => {
 
   // Announcements handlers
   const handleNewAnnouncement = () => {
-    toast.info("Opening new announcement form...");
+    toast("Opening new announcement form...", { icon: "ℹ️" });
     // Open modal or navigate to form
   };
 
   const handleEditAnnouncement = (announcementId) => {
-    toast.info(`Editing announcement ID: ${announcementId}`);
+    toast(`Editing announcement ID: ${announcementId}`, { icon: "ℹ️" });
     // Edit announcement logic
   };
 
@@ -827,7 +827,7 @@ const Home = () => {
   };
 
   const handleEditSchedule = (scheduleId) => {
-    toast.info(`Editing schedule ID: ${scheduleId}`);
+    toast(`Editing schedule ID: ${scheduleId}`, { icon: "ℹ️" });
     // Edit schedule logic - would open a modal with form
   };
 
@@ -861,7 +861,7 @@ const Home = () => {
   };
 
   const handleViewFeedbackDetails = (subjectId) => {
-    toast.info(`Viewing detailed feedback for subject ID: ${subjectId}`);
+    toast(`Viewing detailed feedback for subject ID: ${subjectId}`, { icon: "ℹ️" });
     // Would open modal with detailed feedback
   };
 
@@ -878,7 +878,7 @@ const Home = () => {
   };
 
   const handleViewTicketDetails = (ticketId) => {
-    toast.info(`Viewing ticket details for ID: ${ticketId}`);
+    toast(`Viewing ticket details for ID: ${ticketId}`, { icon: "ℹ️" });
     // Would open modal with full ticket details
   };
 
@@ -923,7 +923,7 @@ const Home = () => {
   };
 
   const handleChangePassword = () => {
-    toast.info("Opening change password dialog...");
+    toast("Opening change password dialog...", { icon: "ℹ️" });
     // Would open change password modal
   };
 
