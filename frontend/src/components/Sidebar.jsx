@@ -1,13 +1,61 @@
 /* 
  * Concordia College CMS - Left Sidebar Navigation Component
- * Based on PDF Page 2 Design - Orange/White Theme
- * Module Names: Profile, Course, TimeTable, DateSheet, Calender, FeedBack, Fee Voucher
+ * Supports Admin (orange/white), Student (orange/white), and Coordinator (black/orange) themes
+ * Line-style SVG icons for modern, clean look
  */
 
 import React, { useState } from "react";
 
-const Sidebar = ({ activeMenu, onMenuChange, menuItems }) => {
+const Sidebar = ({ activeMenu, onMenuChange, menuItems, userType = "admin" }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  // Theme configurations
+  const themes = {
+    admin: {
+      bg: "white",
+      headerBg: "linear-gradient(135deg, #FF6B35 0%, #ff8555 100%)",
+      headerBorder: "#FF6B35",
+      menuBg: "white",
+      menuColor: "#333",
+      menuHoverBg: "#FFF5F2",
+      menuHoverBorder: "#FF6B35",
+      activeBg: "#FF6B35",
+      activeColor: "white",
+      scrollThumb: "#FF6B35",
+      footerBorder: "#e5e7eb",
+      footerColor: "#666",
+    },
+    student: {
+      bg: "white",
+      headerBg: "linear-gradient(135deg, #FF6B35 0%, #ff8555 100%)",
+      headerBorder: "#FF6B35",
+      menuBg: "white",
+      menuColor: "#333",
+      menuHoverBg: "#FFF5F2",
+      menuHoverBorder: "#FF6B35",
+      activeBg: "#FF6B35",
+      activeColor: "white",
+      scrollThumb: "#FF6B35",
+      footerBorder: "#e5e7eb",
+      footerColor: "#666",
+    },
+    coordinator: {
+      bg: "white",
+      headerBg: "linear-gradient(135deg, #FF4500 0%, #ff6347 100%)",
+      headerBorder: "#FF4500",
+      menuBg: "white",
+      menuColor: "#333",
+      menuHoverBg: "#FFF5F2",
+      menuHoverBorder: "#FF4500",
+      activeBg: "#FF4500",
+      activeColor: "white",
+      scrollThumb: "#FF4500",
+      footerBorder: "#e5e7eb",
+      footerColor: "#666",
+    },
+  };
+
+  const theme = themes[userType] || themes.admin;
 
   return (
     <>
@@ -17,8 +65,8 @@ const Sidebar = ({ activeMenu, onMenuChange, menuItems }) => {
           left: 0;
           top: 0;
           height: 100vh;
-          background: white;
-          box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+          background: ${theme.bg};
+          box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
           transition: width 0.3s ease;
           z-index: 1000;
           display: flex;
@@ -34,18 +82,27 @@ const Sidebar = ({ activeMenu, onMenuChange, menuItems }) => {
         }
         
         .sidebar-header {
-          padding: 18px 16px;
-          border-bottom: 2px solid #FF6B35;
-          background: linear-gradient(135deg, #FF6B35 0%, #ff8555 100%);
+          padding: 20px 16px;
+          border-bottom: 2px solid ${theme.headerBorder};
+          background: ${theme.headerBg};
           color: white;
           display: flex;
-          align-items: center;
-          justify-content: space-between;
+          flex-direction: column;
+          gap: 4px;
         }
         
-        .sidebar-logo {
-          font-size: 18px;
+        .sidebar-logo-main {
+          font-size: 20px;
           font-weight: bold;
+          color: ${userType === "coordinator" ? "white" : "white"};
+          white-space: nowrap;
+          overflow: hidden;
+        }
+        
+        .sidebar-logo-sub {
+          font-size: 12px;
+          font-weight: 400;
+          color: white;
           white-space: nowrap;
           overflow: hidden;
         }
@@ -58,6 +115,8 @@ const Sidebar = ({ activeMenu, onMenuChange, menuItems }) => {
           font-size: 18px;
           padding: 4px;
           transition: transform 0.3s ease;
+          align-self: flex-end;
+          margin-top: -24px;
         }
         
         .toggle-btn:hover {
@@ -67,7 +126,7 @@ const Sidebar = ({ activeMenu, onMenuChange, menuItems }) => {
         .sidebar-menu {
           flex: 1;
           overflow-y: auto;
-          padding: 12px 0;
+          padding: 16px 0;
           list-style: none;
           margin: 0;
         }
@@ -77,43 +136,55 @@ const Sidebar = ({ activeMenu, onMenuChange, menuItems }) => {
         }
         
         .sidebar-menu::-webkit-scrollbar-thumb {
-          background: #FF6B35;
+          background: ${theme.scrollThumb};
           border-radius: 3px;
         }
         
         .menu-item {
-          margin: 4px 10px;
-          padding: 11px 14px;
+          margin: 6px 12px;
+          padding: 12px 14px;
           cursor: pointer;
           border-radius: 8px;
-          transition: all 0.3s ease;
+          transition: all 0.2s ease;
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 12px;
           font-size: 14px;
           font-weight: 500;
-          color: #333;
-          border: 2px solid transparent;
+          color: ${theme.menuColor};
+          border: 1px solid transparent;
           white-space: nowrap;
         }
         
         .menu-item:hover {
-          background: #FFF5F2;
-          border-color: #FF6B35;
-          transform: translateX(5px);
+          background: ${theme.menuHoverBg};
+          border-color: ${theme.menuHoverBorder};
         }
         
         .menu-item.active {
-          background: #FF6B35;
-          color: white;
-          border-color: #FF6B35;
-          box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+          background: ${theme.activeBg};
+          color: ${theme.activeColor};
+          border-color: ${theme.activeBg};
+          box-shadow: 0 2px 8px rgba(255, 69, 0, 0.4);
         }
         
         .menu-icon {
-          font-size: 18px;
-          min-width: 18px;
+          min-width: 20px;
+          height: 20px;
           text-align: center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .menu-icon svg {
+          width: 20px;
+          height: 20px;
+          stroke: currentColor;
+          fill: none;
+          stroke-width: 2;
+          stroke-linecap: round;
+          stroke-linejoin: round;
         }
         
         .menu-label {
@@ -125,16 +196,29 @@ const Sidebar = ({ activeMenu, onMenuChange, menuItems }) => {
           display: none;
         }
         
-        .sidebar-collapsed .sidebar-logo {
+        .sidebar-collapsed .sidebar-logo-main,
+        .sidebar-collapsed .sidebar-logo-sub {
           display: none;
         }
         
         .sidebar-footer {
-          padding: 12px;
-          border-top: 1px solid #e5e7eb;
+          padding: 16px 12px;
+          border-top: 1px solid ${theme.footerBorder};
           font-size: 11px;
-          color: #666;
+          color: ${theme.footerColor};
           text-align: center;
+          line-height: 1.4;
+        }
+        
+        .sidebar-footer-main {
+          font-weight: 600;
+          color: ${theme.footerColor};
+        }
+        
+        .sidebar-footer-sub {
+          font-size: 10px;
+          color: ${theme.footerColor};
+          margin-top: 2px;
         }
         
         .sidebar-collapsed .sidebar-footer {
@@ -151,7 +235,8 @@ const Sidebar = ({ activeMenu, onMenuChange, menuItems }) => {
             display: none;
           }
           
-          .sidebar-logo {
+          .sidebar-logo-main,
+          .sidebar-logo-sub {
             display: none;
           }
           
@@ -164,7 +249,10 @@ const Sidebar = ({ activeMenu, onMenuChange, menuItems }) => {
       <div className={`concordia-sidebar ${isCollapsed ? 'sidebar-collapsed' : 'sidebar-full'}`}>
         {/* Header */}
         <div className="sidebar-header">
-          <div className="sidebar-logo">Concordia CMS</div>
+          <div className="sidebar-logo-main">Concordia</div>
+          <div className="sidebar-logo-sub">
+            {userType === "coordinator" ? "Coordinator Panel" : userType === "student" ? "Student Portal" : "Admin Panel"}
+          </div>
           <button 
             className="toggle-btn" 
             onClick={() => setIsCollapsed(!isCollapsed)}
@@ -191,7 +279,8 @@ const Sidebar = ({ activeMenu, onMenuChange, menuItems }) => {
 
         {/* Footer */}
         <div className="sidebar-footer">
-          © 2025 Concordia College
+          <div className="sidebar-footer-main">Concordia College</div>
+          <div className="sidebar-footer-sub">Township Campus</div>
         </div>
       </div>
     </>
