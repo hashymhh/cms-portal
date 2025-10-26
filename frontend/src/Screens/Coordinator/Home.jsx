@@ -11,61 +11,55 @@ import Material from "./Material";
 import Exam from "../Exam";
 import { useNavigate, useLocation } from "react-router-dom";
 
-// Line-style SVG icons for Coordinator Panel
-const LineIcon = ({ d }) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d={d} />
-  </svg>
-);
-
+// Coordinator panel modules with emoji icons matching admin panel style
 const MENU_ITEMS = [
   { 
     id: "dashboard", 
     label: "Dashboard", 
     component: Profile,
-    icon: <LineIcon d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />
+    icon: "🏠"
   },
   { 
     id: "attendance", 
     label: "Attendance", 
     component: Profile,
-    icon: <LineIcon d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+    icon: "📋"
   },
   { 
     id: "marks", 
     label: "Marks Management", 
     component: Exam,
-    icon: <LineIcon d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M20 17l-4-4M20 17l-4 4M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+    icon: "📊"
   },
   { 
     id: "announcements", 
     label: "Announcements", 
     component: Notice,
-    icon: <LineIcon d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2zM13 8H7M13 12H7" />
+    icon: "📢"
   },
   { 
     id: "schedule", 
     label: "Class Schedule", 
     component: Timetable,
-    icon: <LineIcon d="M19 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM16 2v4M8 2v4M3 10h18" />
+    icon: "📅"
   },
   { 
     id: "feedback", 
     label: "Feedback & Tickets", 
     component: Material,
-    icon: <LineIcon d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7zM14 2v5h5M10 9H8M16 13H8M16 17H8" />
+    icon: "💬"
   },
   { 
     id: "audit", 
     label: "Audit Log", 
     component: Material,
-    icon: <LineIcon d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
+    icon: "📝"
   },
   { 
     id: "settings", 
     label: "Settings", 
     component: Profile,
-    icon: <LineIcon d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+    icon: "⚙️"
   },
 ];
 
