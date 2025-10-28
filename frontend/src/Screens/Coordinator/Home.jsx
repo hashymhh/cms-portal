@@ -1177,7 +1177,7 @@ const Home = () => {
                 <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
                   <polyline
                     fill="none"
-                    stroke="#FF6B35"
+                    stroke="#f28300"
                     strokeWidth="2"
                     points={attendancePoints}
                   />
@@ -1190,7 +1190,7 @@ const Home = () => {
                         cx={x}
                         cy={y}
                         r="2"
-                        fill="#FF6B35"
+                        fill="#f28300"
                       />
                     );
                   })}
@@ -2550,7 +2550,7 @@ const Home = () => {
           left: 260px;
           right: 0;
           height: 60px;
-          background: linear-gradient(135deg, #FF4500 0%, #ff6347 100%);
+          background: linear-gradient(135deg, #f28300 0%, #ff9d4d 100%);
           display: flex;
           align-items: center;
           justify-content: space-between;

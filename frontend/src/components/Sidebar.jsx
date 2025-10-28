@@ -13,44 +13,58 @@ const Sidebar = ({ activeMenu, onMenuChange, menuItems, userType = "admin" }) =>
   const themes = {
     admin: {
       bg: "white",
-      headerBg: "linear-gradient(135deg, #FF6B35 0%, #ff8555 100%)",
-      headerBorder: "#FF6B35",
+      headerBg: "linear-gradient(135deg, #f28300 0%, #ff9d4d 100%)",
+      headerBorder: "#f28300",
       menuBg: "white",
       menuColor: "#333",
-      menuHoverBg: "#FFF5F2",
-      menuHoverBorder: "#FF6B35",
-      activeBg: "#FF6B35",
+      menuHoverBg: "#fff5e6",
+      menuHoverBorder: "#f28300",
+      activeBg: "#f28300",
       activeColor: "white",
-      scrollThumb: "#FF6B35",
+      scrollThumb: "#f28300",
       footerBorder: "#e5e7eb",
       footerColor: "#666",
     },
     student: {
       bg: "white",
-      headerBg: "linear-gradient(135deg, #FF6B35 0%, #ff8555 100%)",
-      headerBorder: "#FF6B35",
+      headerBg: "linear-gradient(135deg, #f28300 0%, #ff9d4d 100%)",
+      headerBorder: "#f28300",
       menuBg: "white",
       menuColor: "#333",
-      menuHoverBg: "#FFF5F2",
-      menuHoverBorder: "#FF6B35",
-      activeBg: "#FF6B35",
+      menuHoverBg: "#fff5e6",
+      menuHoverBorder: "#f28300",
+      activeBg: "#f28300",
       activeColor: "white",
-      scrollThumb: "#FF6B35",
+      scrollThumb: "#f28300",
       footerBorder: "#e5e7eb",
       footerColor: "#666",
     },
     coordinator: {
       bg: "white",
-      headerBg: "linear-gradient(135deg, #FF4500 0%, #ff6347 100%)",
-      headerBorder: "#FF4500",
+      headerBg: "linear-gradient(135deg, #f28300 0%, #ff9d4d 100%)",
+      headerBorder: "#f28300",
       menuBg: "white",
       menuColor: "#333",
-      menuHoverBg: "#FFF5F2",
-      menuHoverBorder: "#FF4500",
-      activeBg: "#FF4500",
+      menuHoverBg: "#fff5e6",
+      menuHoverBorder: "#f28300",
+      activeBg: "#f28300",
       activeColor: "white",
-      scrollThumb: "#FF4500",
+      scrollThumb: "#f28300",
       footerBorder: "#e5e7eb",
+      footerColor: "#666",
+    },
+    faculty: {
+      bg: "#f7e6af",
+      headerBg: "linear-gradient(135deg, #f28300 0%, #ff9d4d 100%)",
+      headerBorder: "#f28300",
+      menuBg: "#f7e6af",
+      menuColor: "#333",
+      menuHoverBg: "#ffe4a8",
+      menuHoverBorder: "#f28300",
+      activeBg: "#f28300",
+      activeColor: "white",
+      scrollThumb: "#f28300",
+      footerBorder: "#e5c77b",
       footerColor: "#666",
     },
   };
@@ -251,7 +265,10 @@ const Sidebar = ({ activeMenu, onMenuChange, menuItems, userType = "admin" }) =>
         <div className="sidebar-header">
           <div className="sidebar-logo-main">Concordia</div>
           <div className="sidebar-logo-sub">
-            {userType === "coordinator" ? "Coordinator Panel" : userType === "student" ? "Student Portal" : "Admin Panel"}
+            {userType === "coordinator" ? "Coordinator Panel" : 
+             userType === "student" ? "Student Portal" : 
+             userType === "faculty" ? "Faculty Panel" : 
+             "Admin Panel"}
           </div>
           <button 
             className="toggle-btn" 

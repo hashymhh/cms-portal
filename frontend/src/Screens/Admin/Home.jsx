@@ -178,7 +178,7 @@ const Home = () => {
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Finance &amp; Fee Management</h2>
           <p className="text-sm text-gray-500 mt-1">Track student fees and financial records</p>
         </div>
-        <button className="bg-[#ff6b35] hover:bg-[#ff844f] text-white px-4 py-2 rounded-lg shadow transition">
+        <button className="bg-[#f28300] hover:bg-[#ff9d4d] text-white px-4 py-2 rounded-lg shadow transition">
           + Add Record
         </button>
       </div>
@@ -361,7 +361,7 @@ const Home = () => {
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Announcements &amp; Communication</h2>
           <p className="text-sm text-gray-500 mt-1">Create and manage system-wide announcements</p>
         </div>
-        <button className="bg-[#ff6b35] hover:bg-[#ff844f] text-white px-4 py-2 rounded-lg shadow transition">
+        <button className="bg-[#f28300] hover:bg-[#ff9d4d] text-white px-4 py-2 rounded-lg shadow transition">
           + New Announcement
         </button>
       </div>
@@ -500,7 +500,7 @@ const Home = () => {
         <button
           onClick={handleSaveSettings}
           disabled={settingsLoading}
-          className="bg-[#ff6b35] hover:bg-[#ff844f] disabled:opacity-60 text-white px-4 py-2 rounded-lg shadow transition"
+          className="bg-[#f28300] hover:bg-[#ff9d4d] disabled:opacity-60 text-white px-4 py-2 rounded-lg shadow transition"
         >
           💾 Save Settings
         </button>
@@ -650,7 +650,7 @@ const Home = () => {
             </div>
             <div style={{height:160}} className="w-full flex items-center">
               <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
-                <polyline fill="none" stroke="#FF6B35" strokeWidth="2" points={points} />
+                <polyline fill="none" stroke="#f28300" strokeWidth="2" points={points} />
               </svg>
             </div>
           </div>
@@ -762,7 +762,7 @@ const Home = () => {
           left: 260px;
           right: 0;
           height: 60px;
-          background: linear-gradient(135deg, #FF6B35 0%, #ff8555 100%);
+          background: linear-gradient(135deg, #f28300 0%, #ff9d4d 100%);
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -839,3 +839,4 @@ const Home = () => {
 };
 
 export default Home;
+

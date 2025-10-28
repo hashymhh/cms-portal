@@ -113,7 +113,7 @@ const Home = () => {
           left: 260px;
           right: 0;
           height: 60px;
-          background: linear-gradient(135deg, #FF6B35 0%, #ff8555 100%);
+          background: linear-gradient(135deg, #f28300 0%, #ff9d4d 100%);
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -190,3 +190,4 @@ const Home = () => {
 };
 
 export default Home;
+
