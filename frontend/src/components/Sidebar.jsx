@@ -4,11 +4,9 @@
  * Line-style SVG icons for modern, clean look
  */
 
-import React, { useState } from "react";
+import React from "react";
 
 const Sidebar = ({ activeMenu, onMenuChange, menuItems, userType = "admin" }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
   // Theme configurations
   const themes = {
     admin: {
@@ -79,22 +77,13 @@ const Sidebar = ({ activeMenu, onMenuChange, menuItems, userType = "admin" }) =>
           left: 0;
           top: 0;
           height: 100vh;
+          width: 260px;
           background: ${theme.bg};
           box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
-          transition: width 0.3s ease;
           z-index: 1000;
           display: flex;
           flex-direction: column;
         }
-        
-        .sidebar-full {
-          width: 260px;
-        }
-        
-        .sidebar-collapsed {
-          width: 70px;
-        }
-        
         .sidebar-header {
           padding: 20px 16px;
           border-bottom: 2px solid ${theme.headerBorder};
@@ -121,22 +110,6 @@ const Sidebar = ({ activeMenu, onMenuChange, menuItems, userType = "admin" }) =>
           overflow: hidden;
         }
         
-        .toggle-btn {
-          background: transparent;
-          border: none;
-          color: white;
-          cursor: pointer;
-          font-size: 18px;
-          padding: 4px;
-          transition: transform 0.3s ease;
-          align-self: flex-end;
-          margin-top: -24px;
-        }
-        
-        .toggle-btn:hover {
-          transform: scale(1.1);
-        }
-        
         .sidebar-menu {
           flex: 1;
           overflow-y: auto;
@@ -159,7 +132,7 @@ const Sidebar = ({ activeMenu, onMenuChange, menuItems, userType = "admin" }) =>
           padding: 12px 14px;
           cursor: pointer;
           border-radius: 8px;
-          transition: all 0.2s ease;
+          transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
           display: flex;
           align-items: center;
           gap: 12px;
@@ -173,6 +146,8 @@ const Sidebar = ({ activeMenu, onMenuChange, menuItems, userType = "admin" }) =>
         .menu-item:hover {
           background: ${theme.menuHoverBg};
           border-color: ${theme.menuHoverBorder};
+          transform: translateX(6px);
+          box-shadow: 0 6px 18px rgba(16,24,40,0.04);
         }
         
         .menu-item.active {
@@ -199,20 +174,13 @@ const Sidebar = ({ activeMenu, onMenuChange, menuItems, userType = "admin" }) =>
           stroke-width: 2;
           stroke-linecap: round;
           stroke-linejoin: round;
+          transition: transform 0.22s ease, color 0.18s ease;
         }
+        .menu-item:hover .menu-icon svg { transform: scale(1.08); color: ${theme.menuHoverBorder}; }
         
         .menu-label {
           overflow: hidden;
           text-overflow: ellipsis;
-        }
-        
-        .sidebar-collapsed .menu-label {
-          display: none;
-        }
-        
-        .sidebar-collapsed .sidebar-logo-main,
-        .sidebar-collapsed .sidebar-logo-sub {
-          display: none;
         }
         
         .sidebar-footer {
@@ -235,32 +203,13 @@ const Sidebar = ({ activeMenu, onMenuChange, menuItems, userType = "admin" }) =>
           margin-top: 2px;
         }
         
-        .sidebar-collapsed .sidebar-footer {
-          display: none;
-        }
-        
         /* Responsive Design */
         @media (max-width: 768px) {
-          .concordia-sidebar {
-            width: 70px;
-          }
-          
-          .menu-label {
-            display: none;
-          }
-          
-          .sidebar-logo-main,
-          .sidebar-logo-sub {
-            display: none;
-          }
-          
-          .sidebar-footer {
-            display: none;
-          }
+          .concordia-sidebar { width: 260px; }
         }
       `}</style>
 
-      <div className={`concordia-sidebar ${isCollapsed ? 'sidebar-collapsed' : 'sidebar-full'}`}>
+      <div className="concordia-sidebar">
         {/* Header */}
         <div className="sidebar-header">
           <div className="sidebar-logo-main">Concordia</div>
@@ -270,13 +219,6 @@ const Sidebar = ({ activeMenu, onMenuChange, menuItems, userType = "admin" }) =>
              userType === "faculty" ? "Faculty Panel" : 
              "Admin Panel"}
           </div>
-          <button 
-            className="toggle-btn" 
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            title={isCollapsed ? "Expand" : "Collapse"}
-          >
-            {isCollapsed ? '☰' : '✕'}
-          </button>
         </div>
 
         {/* Menu Items */}

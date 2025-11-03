@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Login from "./Screens/Login";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
@@ -9,8 +9,20 @@ import AdminHome from "./Screens/Admin/Home";
 import CoordinatorHome from "./Screens/Coordinator/Home";
 import ForgetPassword from "./Screens/ForgetPassword";
 import UpdatePassword from "./Screens/UpdatePassword";
+import ModernCMS_UI from "./utils/ModernUI";
 
 const App = () => {
+  // Initialize Modern UI enhancements
+  useEffect(() => {
+    // Initialize the Modern UI system
+    window.modernCMS = new ModernCMS_UI();
+    
+    // Cleanup on unmount
+    return () => {
+      // Remove any event listeners if needed
+    };
+  }, []);
+
   return (
     <>
       <Provider store={mystore}>

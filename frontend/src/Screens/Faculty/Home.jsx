@@ -285,6 +285,18 @@ const Home = () => {
     navigate(`/faculty?page=${menuId}`);
   };
 
+  // Small inline chart renderer (sparkline-like) - returns SVG element
+  const Sparkline = ({ data = [], color = '#f28300' }) => {
+    const max = Math.max(...data, 1);
+    const w = 200; const h = 60; const step = w / Math.max(data.length - 1, 1);
+    const points = data.map((v, i) => `${i * step},${h - (v / max) * (h - 8)}`).join(' ');
+    return (
+      <svg className="chart-svg" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" aria-hidden>
+        <polyline fill="none" stroke={color} strokeWidth="2" points={points} strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("userToken");
     localStorage.removeItem("userType");
@@ -413,9 +425,10 @@ const Home = () => {
     return (
       <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
         {/* Profile Header */}
-        <div style={{ background: "white", borderRadius: "12px", boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", overflow: "hidden", marginBottom: "30px" }}>
-          <div style={{ background: "#f28300", padding: "20px 30px", borderRadius: "12px 12px 0 0" }}>
-            <h1 style={{ color: "white", fontSize: "28px", fontWeight: "bold", margin: 0 }}>Profile</h1>
+        <div className="ui-card fade-in" style={{ overflow: "hidden", marginBottom: "30px", borderTop: '4px solid #f28300' }}>
+          <div style={{ padding: "20px 30px" }}>
+            <h1 style={{ color: "#111827", fontSize: "28px", fontWeight: "700", margin: 0 }}>Profile</h1>
+            <div style={{ fontSize:12, color:'#6b7280', marginTop:6 }}>Manage your personal and employment information</div>
           </div>
         </div>
 
@@ -428,22 +441,10 @@ const Home = () => {
             </h2>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "25px" }}>
               {/* Profile Picture */}
-              <div style={{
-                width: "120px",
-                height: "120px",
-                borderRadius: "50%",
-                background: employeeData.profilePicture 
-                  ? `url(${employeeData.profilePicture}) center/cover no-repeat`
-                  : "linear-gradient(135deg, #f28300 0%, #ff9d4d 100%)",
-                border: "4px solid #f28300",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "white",
-                fontSize: "48px",
-                fontWeight: "bold",
-              }}>
-                {!employeeData.profilePicture && (employeeData.name?.charAt(0)?.toUpperCase() || "F")}
+              <div className="avatar-circle" style={{width:120,height:120, border:'4px solid #fff', background: employeeData.profilePicture ? `url(${employeeData.profilePicture}) center/cover no-repeat` : '#fff'}}>
+                {!employeeData.profilePicture && (
+                  <div style={{color:'#f28300', fontSize:48, fontWeight:700}}>{employeeData.name?.charAt(0)?.toUpperCase() || 'F'}</div>
+                )}
               </div>
 
               {/* Name Field */}
@@ -507,7 +508,7 @@ const Home = () => {
       {/* Course List */}
       <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
         {courseModules.map(course => (
-          <div key={course.id} style={{ background: "white", borderRadius: "12px", border: "2px solid #f28300", overflow: "hidden" }}>
+          <div key={course.id} className="ui-card" style={{ background: "white", borderRadius: "12px", border: "2px solid #f28300", overflow: "hidden" }}>
             {/* Course Header */}
             <div 
               onClick={() => handleCourseToggle(course.id)}
@@ -531,41 +532,39 @@ const Home = () => {
             </div>
 
             {/* Submodules */}
-            {expandedCourse === course.id && (
-              <div style={{ padding: "30px", display: "flex", gap: "20px", flexWrap: "wrap" }}>
-                {course.submodules.map(submodule => (
-                  <div
-                    key={submodule.id}
-                    onClick={() => handleSubmoduleClick(submodule)}
-                    style={{
-                      background: "#f28300",
-                      color: "white",
-                      padding: "20px 30px",
-                      borderRadius: "10px",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                      fontSize: "18px",
-                      fontWeight: "600",
-                      transition: "all 0.2s",
-                      boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)"
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "#d66d0a";
-                      e.currentTarget.style.transform = "translateY(-2px)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "#f28300";
-                      e.currentTarget.style.transform = "translateY(0)";
-                    }}
-                  >
-                    <span style={{ fontSize: "28px" }}>{submodule.icon}</span>
-                    {submodule.name}
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className="accordion" style={{ padding: expandedCourse === course.id ? '30px' : '0 30px', display: expandedCourse === course.id ? 'flex' : 'none', gap: '20px', flexWrap: 'wrap', maxHeight: expandedCourse === course.id ? '800px' : '0' }}>
+              {expandedCourse === course.id && course.submodules.map(submodule => (
+                <div
+                  key={submodule.id}
+                  onClick={() => handleSubmoduleClick(submodule)}
+                  style={{
+                    background: "#f28300",
+                    color: "white",
+                    padding: "20px 30px",
+                    borderRadius: "10px",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    fontSize: "18px",
+                    fontWeight: "600",
+                    transition: "all 0.2s",
+                    boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#d66d0a";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "#f28300";
+                    e.currentTarget.style.transform = "translateY(0)";
+                  }}
+                >
+                  <span style={{ fontSize: "28px" }}>{submodule.icon}</span>
+                  {submodule.name}
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>
@@ -693,11 +692,22 @@ const Home = () => {
           <div>
             <h2 style={{ fontSize: "22px", fontWeight: "bold", color: "#333", marginBottom: "20px" }}>Attendance</h2>
             <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "20px" }}>
+              {/* Small Attendance bar chart */}
+              <div className="ui-card" style={{marginBottom:12, display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+                <div style={{fontSize:14, color:'#6b7280'}}>Class Attendance Overview</div>
+                <svg width="140" height="40" viewBox="0 0 140 40" className="chart-svg" aria-hidden>
+                  {[60,70,85,90,78].map((v,i)=>{
+                    const bw = 18; const gap = 6; const x = i*(bw+gap);
+                    const h = Math.max(2, (v/100)*32);
+                    return (<rect key={i} x={x} y={40-h} width={bw} height={h} fill="#f28300" rx="3" />)
+                  })}
+                </svg>
+              </div>
+              <table className="table-hover" style={{ width: "100%", borderCollapse: "collapse", marginBottom: "20px" }}>
                 <thead>
                   <tr style={{ background: "#f28300", color: "white" }}>
-                    <th style={{ padding: "15px", textAlign: "left", border: "1px solid #d66d0a" }}>Roll No</th>
-                    <th style={{ padding: "15px", textAlign: "left", border: "1px solid #d66d0a" }}>Name</th>
+                    <th className="sortable" style={{ padding: "15px", textAlign: "left", border: "1px solid #d66d0a" }}>Roll No <span style={{opacity:0.9}}>▾</span></th>
+                    <th className="sortable" style={{ padding: "15px", textAlign: "left", border: "1px solid #d66d0a" }}>Name <span style={{opacity:0.9}}>▾</span></th>
                     <th style={{ padding: "15px", textAlign: "left", border: "1px solid #d66d0a" }}>Gender</th>
                     <th style={{ padding: "15px", textAlign: "left", border: "1px solid #d66d0a" }}>Status</th>
                   </tr>
@@ -930,14 +940,8 @@ const Home = () => {
                   type="text"
                   value={markAttendanceForm.id}
                   onChange={(e) => handleMarkAttendanceFormChange("id", e.target.value)}
-                  style={{ 
-                    width: "100%", 
-                    padding: "12px", 
-                    borderRadius: "8px", 
-                    border: "1px solid #ddd", 
-                    fontSize: "16px",
-                    boxSizing: "border-box"
-                  }}
+                  className="input-focus"
+                  style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #ddd", fontSize: "16px", boxSizing: "border-box" }}
                   placeholder="Enter ID"
                   required
                 />
@@ -948,14 +952,8 @@ const Home = () => {
                   type="text"
                   value={markAttendanceForm.name}
                   onChange={(e) => handleMarkAttendanceFormChange("name", e.target.value)}
-                  style={{ 
-                    width: "100%", 
-                    padding: "12px", 
-                    borderRadius: "8px", 
-                    border: "1px solid #ddd", 
-                    fontSize: "16px",
-                    boxSizing: "border-box"
-                  }}
+                  className="input-focus"
+                  style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #ddd", fontSize: "16px", boxSizing: "border-box" }}
                   placeholder="Enter Name"
                   required
                 />
@@ -966,14 +964,8 @@ const Home = () => {
                   type="text"
                   value={markAttendanceForm.designation}
                   onChange={(e) => handleMarkAttendanceFormChange("designation", e.target.value)}
-                  style={{ 
-                    width: "100%", 
-                    padding: "12px", 
-                    borderRadius: "8px", 
-                    border: "1px solid #ddd", 
-                    fontSize: "16px",
-                    boxSizing: "border-box"
-                  }}
+                  className="input-focus"
+                  style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #ddd", fontSize: "16px", boxSizing: "border-box" }}
                   placeholder="Enter Designation"
                 />
               </div>
@@ -983,14 +975,8 @@ const Home = () => {
                   type="text"
                   value={markAttendanceForm.company}
                   onChange={(e) => handleMarkAttendanceFormChange("company", e.target.value)}
-                  style={{ 
-                    width: "100%", 
-                    padding: "12px", 
-                    borderRadius: "8px", 
-                    border: "1px solid #ddd", 
-                    fontSize: "16px",
-                    boxSizing: "border-box"
-                  }}
+                  className="input-focus"
+                  style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #ddd", fontSize: "16px", boxSizing: "border-box" }}
                   placeholder="Enter Company"
                 />
               </div>
@@ -1000,33 +986,13 @@ const Home = () => {
                   type="date"
                   value={markAttendanceForm.attendanceDate}
                   onChange={(e) => handleMarkAttendanceFormChange("attendanceDate", e.target.value)}
-                  style={{ 
-                    width: "100%", 
-                    padding: "12px", 
-                    borderRadius: "8px", 
-                    border: "1px solid #ddd", 
-                    fontSize: "16px",
-                    boxSizing: "border-box"
-                  }}
+                  className="input-focus"
+                  style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #ddd", fontSize: "16px", boxSizing: "border-box" }}
                   required
                 />
               </div>
             </div>
-            <button
-              type="submit"
-              style={{
-                background: "#28a745",
-                color: "white",
-                border: "none",
-                padding: "14px 32px",
-                borderRadius: "8px",
-                cursor: "pointer",
-                fontWeight: "600",
-                fontSize: "16px",
-                marginTop: "20px",
-                boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)"
-              }}
-            >
+            <button type="submit" className="btn-orange" style={{ marginTop:20, background:'#28a745', boxShadow:'0 6px 18px rgba(40,167,69,0.12)' }}>
               Mark CheckIN
             </button>
           </form>
@@ -1100,14 +1066,8 @@ const Home = () => {
                   type="text"
                   value={leaveForm.company}
                   onChange={(e) => handleLeaveFormChange("company", e.target.value)}
-                  style={{ 
-                    width: "100%", 
-                    padding: "12px", 
-                    borderRadius: "8px", 
-                    border: "1px solid #ddd", 
-                    fontSize: "16px",
-                    boxSizing: "border-box"
-                  }}
+                  className="input-focus"
+                  style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #ddd", fontSize: "16px", boxSizing: "border-box" }}
                   placeholder="Enter Company"
                 />
               </div>
@@ -1117,15 +1077,8 @@ const Home = () => {
                   value={leaveForm.reason}
                   onChange={(e) => handleLeaveFormChange("reason", e.target.value)}
                   rows={4}
-                  style={{ 
-                    width: "100%", 
-                    padding: "12px", 
-                    borderRadius: "8px", 
-                    border: "1px solid #ddd", 
-                    fontSize: "16px", 
-                    resize: "vertical",
-                    boxSizing: "border-box"
-                  }}
+                  className="input-focus"
+                  style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #ddd", fontSize: "16px", resize: "vertical", boxSizing: "border-box" }}
                   placeholder="Enter reason for leave..."
                   required
                 />
@@ -1148,21 +1101,7 @@ const Home = () => {
                 />
               </div>
             </div>
-            <button
-              type="submit"
-              style={{
-                background: "#28a745",
-                color: "white",
-                border: "none",
-                padding: "14px 32px",
-                borderRadius: "8px",
-                cursor: "pointer",
-                fontWeight: "600",
-                fontSize: "16px",
-                marginTop: "20px",
-                boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)"
-              }}
-            >
+            <button type="submit" className="btn-orange" style={{ marginTop:20, background:'#28a745', boxShadow:'0 6px 18px rgba(40,167,69,0.12)' }}>
               Submit
             </button>
           </form>
@@ -1199,8 +1138,20 @@ const Home = () => {
     return (
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
         {/* Header */}
-        <div style={{ background: "#f28300", padding: "20px 30px", borderRadius: "12px", marginBottom: "30px" }}>
-          <h1 style={{ color: "white", fontSize: "28px", fontWeight: "bold", margin: 0 }}>Students List</h1>
+        <div style={{ background: "#f28300", padding: "20px 30px", borderRadius: "12px", marginBottom: "16px", display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+          <div>
+            <h1 style={{ color: "white", fontSize: "28px", fontWeight: "bold", margin: 0 }}>Students List</h1>
+            <div className="breadcrumb" style={{color:'rgba(255,255,255,0.9)'}}>
+              <a href="#" onClick={(e)=>{e.preventDefault(); setSelectedMenu('profile')}}>Home</a>
+              <span>/</span>
+              <span>Students</span>
+            </div>
+          </div>
+          <div>
+            <button className="btn-orange" onClick={() => { setExpandedStudentCourse(null); window.scrollTo({top:0, behavior:'smooth'}) }} style={{background:'rgba(255,255,255,0.12)'}}>
+              Refresh
+            </button>
+          </div>
         </div>
 
         {/* Course Accordion with Student Lists */}
@@ -1254,42 +1205,12 @@ const Home = () => {
 
                 {/* Student List - Accordion Content */}
                 {isExpanded && (
-                  <div style={{ 
-                    padding: "0",
-                    maxHeight: "500px",
-                    overflowY: "auto",
-                    background: "white"
-                  }}>
+                  <div style={{ padding: "0", maxHeight: "500px", overflowY: "auto", background: "white" }} className="accordion slide-down">
                     {courseStudents.length > 0 ? (
                       courseStudents.map((student, index) => (
-                        <div 
-                          key={student.id} 
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            padding: "20px 30px",
-                            borderBottom: index < courseStudents.length - 1 ? "1px solid #f0d9b5" : "none",
-                            transition: "background 0.2s",
-                            gap: "20px"
-                          }}
-                          onMouseEnter={(e) => e.currentTarget.style.background = "#fff9f0"}
-                          onMouseLeave={(e) => e.currentTarget.style.background = "white"}
-                        >
+                        <div key={student.id} className="ui-card" style={{display:'flex', alignItems:'center', padding:'16px 20px', borderBottom: index < courseStudents.length - 1 ? '1px solid #f0d9b5' : 'none', gap:20}}>
                           {/* Student Avatar Icon */}
-                          <div style={{
-                            width: "50px",
-                            height: "50px",
-                            borderRadius: "50%",
-                            background: "linear-gradient(135deg, #f28300 0%, #ff9d4d 100%)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            color: "white",
-                            fontWeight: "bold",
-                            fontSize: "20px",
-                            flexShrink: 0,
-                            border: "3px solid #fff5e6"
-                          }}>
+                          <div className="avatar-circle" style={{width:50,height:50, background:'linear-gradient(135deg,#f28300 0%,#ff9d4d 100%)', color:'#fff', border:'3px solid #fff5e6'}}>
                             {student.name.charAt(0).toUpperCase()}
                           </div>
 
@@ -1317,25 +1238,13 @@ const Home = () => {
                               alignItems: "center"
                             }}>
                               {/* Contact Number */}
-                              <div style={{ 
-                                display: "flex", 
-                                alignItems: "center", 
-                                gap: "8px",
-                                color: "#666",
-                                fontSize: "15px"
-                              }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#666", fontSize: "15px" }}>
                                 <span style={{ fontSize: "16px" }}>📞</span>
                                 <span>{student.contact}</span>
                               </div>
 
                               {/* Email */}
-                              <div style={{ 
-                                display: "flex", 
-                                alignItems: "center", 
-                                gap: "8px",
-                                color: "#666",
-                                fontSize: "15px"
-                              }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#666", fontSize: "15px" }}>
                                 <span style={{ fontSize: "16px" }}>✉️</span>
                                 <span>{student.email}</span>
                               </div>
@@ -1424,17 +1333,10 @@ const Home = () => {
           z-index: 999;
         }
 
-        .faculty-topbar h1 {
-          color: white;
-          font-size: 20px;
-          font-weight: 600;
-          margin: 0;
-        }
-
         .faculty-user-section {
           display: flex;
           align-items: center;
-          gap: 20px;
+          gap: 16px;
         }
 
         .faculty-notification {
@@ -1442,21 +1344,11 @@ const Home = () => {
           cursor: pointer;
           color: white;
           font-size: 20px;
+          transition: transform 0.2s;
         }
 
-        .faculty-user-info {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          color: white;
-          cursor: pointer;
-          padding: 8px 16px;
-          borderRadius: 8px;
-          transition: background 0.2s;
-        }
-
-        .faculty-user-info:hover {
-          background: rgba(255, 255, 255, 0.1);
+        .faculty-notification:hover {
+          transform: scale(1.1);
         }
 
         .faculty-avatar {
@@ -1514,16 +1406,17 @@ const Home = () => {
       />
 
       <div className="faculty-topbar">
-        <h1>Welcome to Faculty Panel</h1>
+        <div className="breadcrumb" style={{color:'rgba(255,255,255,0.9)', marginTop:6}}>
+          <a href="#" onClick={(e)=>{e.preventDefault(); setSelectedMenu('profile')}}>Home</a>
+          <span>/</span>
+          <span>{MENU_ITEMS.find(item => item.id === selectedMenu)?.label || 'Profile'}</span>
+        </div>
         <div className="faculty-user-section">
+          <div className="avatar-circle" style={{width:38,height:38,fontSize:14,marginRight:8}}>
+            {profileData?.firstName?.charAt(0)?.toUpperCase() || 'F'}
+          </div>
           <div className="faculty-notification" title="Notifications">
             🔔
-          </div>
-          <div className="faculty-user-info">
-            <div className="faculty-avatar">
-              {profileData?.firstName?.charAt(0)?.toUpperCase() || "F"}
-            </div>
-            <span>{profileData?.firstName || "Faculty"} {profileData?.lastName || ""}</span>
           </div>
           <button className="faculty-logout-btn" onClick={handleLogout}>
             Logout

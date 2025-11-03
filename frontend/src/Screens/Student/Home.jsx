@@ -162,7 +162,14 @@ const Home = () => {
       {/* Orange Topbar */}
       <div className="topbar">
         <div className="topbar-left">
-          {/* Empty left side */}
+          <div style={{display:'flex', flexDirection:'column'}}>
+            <div style={{fontSize:18, fontWeight:700, color:'#fff'}}>Student Portal</div>
+            <div className="breadcrumb" style={{color:'rgba(255,255,255,0.9)', marginTop:6}}>
+              <a href="#" onClick={(e)=>{e.preventDefault(); setSelectedMenu('profile')}}>Home</a>
+              <span>/</span>
+              <span>{MENU_ITEMS.find(item => item.id === selectedMenu)?.label || 'Profile'}</span>
+            </div>
+          </div>
         </div>
         <div className="topbar-right">
           <div className="topbar-icon" title="Messages">
@@ -172,7 +179,7 @@ const Home = () => {
             🔔
           </div>
           <div className="topbar-icon" onClick={handleLogout} title="Profile">
-            👤
+            <div className="avatar-circle" style={{width:36,height:36, background:'#fff', color:'#f28300', fontWeight:700, display:'flex', alignItems:'center', justifyContent:'center'}}> {profileData?.firstName?.charAt(0)?.toUpperCase() || 'S'}</div>
           </div>
         </div>
       </div>
