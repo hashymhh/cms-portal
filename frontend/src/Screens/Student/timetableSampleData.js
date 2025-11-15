@@ -1,0 +1,55 @@
+// Sample timetable data for ICS degree - Sep 2025
+export const SAMPLE_TIMETABLE = {
+  semesterLabel: "Sep 2025",
+  weekLabel: "Sep 2025 - Week 1",
+  lectureSlots: [
+    { id: 1, label: "Lecture 1", time: "8:00 - 9:30" },
+    { id: 2, label: "Lecture 2", time: "9:30 - 11:00" },
+    { id: 3, label: "Lecture 3", time: "11:00 - 12:30" },
+    { id: 4, label: "Lecture 4", time: "12:30 - 2:00" },
+    { id: 5, label: "Lecture 5", time: "2:00 - 3:30" },
+    { id: 6, label: "Lecture 6", time: "3:30 - 5:00" },
+  ],
+  days: {
+    Monday: [
+      { slot: 1, subject: "Math", time: "12:00 - 1:30", room: "403", teacher: "Mr. Ahmed", subjectId: 1 },
+      { slot: 2, subject: "Subject 1", time: "1:30 - 3:00", room: "404", teacher: "Ms. Khan", subjectId: 1 },
+      { slot: 3, subject: "No Class" },
+      { slot: 4, subject: "No Class" },
+      { slot: 5, subject: "No Class" },
+      { slot: 6, subject: "No Class" },
+    ],
+    Tuesday: [
+      { slot: 1, subject: "Physics", time: "9:00 - 10:30", room: "405", teacher: "Dr. Ali", subjectId: 2 },
+      { slot: 2, subject: "Subject 2", time: "10:30 - 12:00", room: "406", teacher: "Ms. Sara", subjectId: 2 },
+      { slot: 3, subject: "No Class" },
+      { slot: 4, subject: "No Class" },
+      { slot: 5, subject: "No Class" },
+      { slot: 6, subject: "No Class" },
+    ],
+    Wednesday: [
+      { slot: 1, subject: "Chemistry", time: "8:00 - 9:30", room: "407", teacher: "Mr. Bilal", subjectId: 3 },
+      { slot: 2, subject: "Lab - Chem", time: "9:30 - 11:00", room: "Lab 1", teacher: "Lab Staff", subjectId: 3 },
+      { slot: 3, subject: "No Class" },
+      { slot: 4, subject: "No Class" },
+      { slot: 5, subject: "No Class" },
+      { slot: 6, subject: "No Class" },
+    ],
+    Thursday: [
+      { slot: 1, subject: "Computer Science", time: "11:00 - 12:30", room: "408", teacher: "Sir Usman", subjectId: 4 },
+      { slot: 2, subject: "Project", time: "12:30 - 2:00", room: "410", teacher: "Mr. Rehan", subjectId: 4 },
+      { slot: 3, subject: "No Class" },
+      { slot: 4, subject: "No Class" },
+      { slot: 5, subject: "No Class" },
+      { slot: 6, subject: "No Class" },
+    ],
+    Friday: [
+      { slot: 1, subject: "Review", time: "8:00 - 9:30", room: "409", teacher: "Staff", subjectId: 1 },
+      { slot: 2, subject: "Quiz Prep", time: "9:30 - 11:00", room: "409", teacher: "Staff", subjectId: 2 },
+      { slot: 3, subject: "No Class" },
+      { slot: 4, subject: "No Class" },
+      { slot: 5, subject: "No Class" },
+      { slot: 6, subject: "No Class" },
+    ],
+  },
+};

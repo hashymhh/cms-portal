@@ -1,162 +1,62 @@
-import React, { useState } from "react";
-import CustomButton from "../../components/CustomButton";
-import UpdatePasswordLoggedIn from "../../components/UpdatePasswordLoggedIn";
+/* 
+ * Profile (MVP) — Concordia College CMS
+ * Simple orange-themed profile matching PDF page 1 design
+ * Displays Personal Info and Academic Information cards only
+ */
+
+import React from "react";
 
 const Profile = ({ profileData }) => {
-  const [showPasswordUpdate, setShowPasswordUpdate] = useState(false);
   if (!profileData) return null;
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "-";
-    const d = new Date(dateString);
-    if (isNaN(d.getTime())) return "-";
-    return d.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   return (
-    <div className="max-w-6xl mx-auto p-8">
-      {/* Header Section */}
-      <div className="flex items-center gap-8 mb-12 border-b pb-8 justify-between">
-        <div className="flex items-center gap-8">
-          <img
-            src={`${process.env.REACT_APP_MEDIA_LINK}/${profileData.profile}`}
-            alt="Profile"
-            className="w-40 h-40 rounded-full object-cover ring-4 ring-blue-500 ring-offset-4"
-          />
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              {`${profileData.firstName || ""} ${profileData.middleName || ""} ${profileData.lastName || ""}`}
-            </h1>
-            <p className="text-lg text-gray-600 mb-1">
-              {profileData.enrollmentNo}
-            </p>
-            <p className="text-lg text-blue-600 font-medium">
-              {profileData.branchId?.name || "-"}
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-8 justify-end">
-          <CustomButton
-            onClick={() => setShowPasswordUpdate(!showPasswordUpdate)}
-            variant="primary"
-          >
-            {showPasswordUpdate ? "Hide" : "Update Password"}
-          </CustomButton>
-        </div>
-        {showPasswordUpdate && (
-          <UpdatePasswordLoggedIn
-            onClose={() => setShowPasswordUpdate(false)}
-          />
-        )}
-      </div>
+    <div className="space-y-4">
+      <style>{`
+        .orange-header { background:#FF8B2D; color:#fff; padding:18px 24px; border-radius:16px; font-weight:700; font-size:28px; }
+        .panel { background:#FFA752; padding:18px; border-radius:18px; display:grid; grid-template-columns: 1fr 1fr; gap:18px; }
+        .info-card { background:#fff; border-radius:14px; padding:16px; box-shadow:0 1px 2px rgba(0,0,0,0.06); }
+        .avatar { width:80px; height:80px; border-radius:50%; background:#E91E63; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; }
+        .section-title { text-align:center; font-weight:800; padding-bottom:8px; border-bottom:2px solid #333; margin-bottom:12px; }
+        .info-row { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #f0f0f0; }
+        .info-row:last-child { border-bottom:none; }
+        .label { font-weight:700; color:#333; }
+        .value { color:#555; }
+        @media (max-width:900px){ .panel { grid-template-columns: 1fr; } }
+      `}</style>
 
-      <div className="grid grid-cols-1 gap-12">
-        {/* Personal Information */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-200">
-            Personal Information
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div>
-              <label className="text-sm font-medium text-gray-500">Email</label>
-              <p className="text-gray-900">{profileData.email || "-"}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-500">Phone</label>
-              <p className="text-gray-900">{profileData.phone || "-"}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-500">
-                Gender
-              </label>
-              <p className="text-gray-900 capitalize">{profileData.gender || "-"}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-500">
-                Blood Group
-              </label>
-              <p className="text-gray-900">{profileData.bloodGroup || "-"}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-500">
-                Date of Birth
-              </label>
-              <p className="text-gray-900">{formatDate(profileData.dob)}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-500">
-                Semester
-              </label>
-              <p className="text-gray-900">{profileData.semester ?? "-"}</p>
-            </div>
+      <div className="orange-header">Profile</div>
+
+      <div className="panel">
+        {/* Personal Info Card */}
+        <div className="info-card">
+          <div className="avatar">
+            <span style={{fontSize:40}}>👤</span>
+          </div>
+          <div className="section-title">Personal Info</div>
+          <div className="info-row">
+            <span className="label">Name</span>
+            <span className="value">{profileData?.firstName || profileData?.name || "Fatima"}</span>
+          </div>
+          <div className="info-row">
+            <span className="label">Father's Name</span>
+            <span className="value">{profileData?.fatherName || profileData?.fatherMiddleName || "Tariq"}</span>
           </div>
         </div>
 
-        {/* Address Information */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-200">
-            Address Information
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div>
-              <label className="text-sm font-medium text-gray-500">
-                Address
-              </label>
-              <p className="text-gray-900">{profileData.address || "-"}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-500">City</label>
-              <p className="text-gray-900">{profileData.city || "-"}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-500">State</label>
-              <p className="text-gray-900">{profileData.state || "-"}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-500">
-                Pincode
-              </label>
-              <p className="text-gray-900">{profileData.pincode || "-"}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-500">
-                Country
-              </label>
-              <p className="text-gray-900">{profileData.country || "-"}</p>
-            </div>
+        {/* Academic Information Card */}
+        <div className="info-card">
+          <div className="section-title">Academic Information</div>
+          <div className="info-row">
+            <span className="label">Registration No.</span>
+            <span className="value">{profileData?.registrationNumber || "4535"}</span>
           </div>
-        </div>
-
-        {/* Emergency Contact */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-200">
-            Emergency Contact
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div>
-              <label className="text-sm font-medium text-gray-500">Name</label>
-              <p className="text-gray-900">
-                {profileData.emergencyContact?.name || "-"}
-              </p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-500">
-                Relationship
-              </label>
-              <p className="text-gray-900">
-                {profileData.emergencyContact?.relationship || "-"}
-              </p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-500">Phone</label>
-              <p className="text-gray-900">
-                {profileData.emergencyContact?.phone || "-"}
-              </p>
-            </div>
+          <div className="info-row">
+            <span className="label">Roll no.</span>
+            <span className="value">{profileData?.rollNo || profileData?.rollno || "53"}</span>
+          </div>
+          <div className="info-row">
+            <span className="label">Degree</span>
+            <span className="value">{profileData?.course || profileData?.degree || "ICS"}</span>
           </div>
         </div>
       </div>

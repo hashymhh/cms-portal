@@ -16,7 +16,7 @@ const USER_TYPES = {
 
 const LoginForm = ({ selected, onSubmit, formData, setFormData }) => (
   <form
-    className="w-full p-8 bg-white rounded-2xl shadow-xl border border-gray-200"
+    className="w-full p-8 bg-white rounded-2xl shadow-xl border border-gray-200 ui-card fade-in"
     onSubmit={onSubmit}
   >
     <div className="mb-6">
@@ -30,7 +30,7 @@ const LoginForm = ({ selected, onSubmit, formData, setFormData }) => (
         type="email"
         id="email"
         required
-        className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="input-focus w-full px-4 py-2 text-sm border border-gray-300 rounded-lg"
         value={formData.email}
         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
       />
@@ -46,14 +46,14 @@ const LoginForm = ({ selected, onSubmit, formData, setFormData }) => (
         type="password"
         id="password"
         required
-        className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="input-focus w-full px-4 py-2 text-sm border border-gray-300 rounded-lg"
         value={formData.password}
         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
       />
     </div>
     <div className="flex items-center justify-between mb-6">
       <Link
-        className="text-sm text-blue-600 hover:underline"
+        className="text-sm text-blue-600 hover:text-[#f28300] hover:underline transition-colors"
         to="/forget-password"
       >
         Forgot Password?
@@ -61,7 +61,7 @@ const LoginForm = ({ selected, onSubmit, formData, setFormData }) => (
     </div>
     <CustomButton
       type="submit"
-      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg transition duration-200 flex justify-center items-center gap-2"
+      className="btn-orange w-full font-semibold py-2.5 px-4 rounded-lg transition duration-200 flex justify-center items-center gap-2"
     >
       Login
       <FiLogIn className="text-lg" />
@@ -75,10 +75,10 @@ const UserTypeSelector = ({ selected, onSelect }) => (
       <button
         key={type}
         onClick={() => onSelect(type)}
-        className={`px-5 py-2 text-sm font-medium rounded-full transition duration-200 ${
+        className={`px-5 py-2 text-sm font-medium rounded-full transition-all duration-200 ${
           selected === type
-            ? "bg-blue-600 text-white shadow"
-            : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+            ? "bg-[#f28300] text-white shadow-lg transform scale-105"
+            : "bg-gray-100 text-gray-800 hover:bg-gray-200 hover:shadow"
         }`}
       >
         {type}
