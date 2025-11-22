@@ -15,17 +15,18 @@ import axiosWrapper from "../../utils/AxiosWrapper";
 import Profile from "./Profile";
 import Exam from "../Exam";
 import { useNavigate, useLocation } from "react-router-dom";
+import AdminIcons from "../../components/AdminIcons";
 
-// Admin panel modules with orange/white theme
+// Admin panel modules with professional SVG icons
 const MENU_ITEMS = [
-  { id: "dashboard", label: "Dashboard", icon: "🏠", component: Profile },
-  { id: "departments", label: "Departments", icon: "🏢", component: Branch },
-  { id: "users", label: "User Management", icon: "👥", component: Admin },
-  { id: "timetable", label: "Timetable", icon: "📅", component: Timetable },
-    { id: "reports", label: "Reports & Analytics", icon: "📊", component: Reports },
-  { id: "finance", label: "Finance", icon: "💸", component: null },
-  { id: "announcements", label: "Announcements", icon: "📢", component: null },
-  { id: "settings", label: "Settings", icon: "⚙️", component: null },
+  { id: "dashboard", label: "Dashboard", icon: <AdminIcons.Dashboard />, component: Profile },
+  { id: "departments", label: "Departments", icon: <AdminIcons.Departments />, component: Branch },
+  { id: "users", label: "User Management", icon: <AdminIcons.Users />, component: Admin },
+  { id: "timetable", label: "Timetable", icon: <AdminIcons.Timetable />, component: Timetable },
+  { id: "reports", label: "Reports & Analytics", icon: <AdminIcons.Reports />, component: Reports },
+  { id: "finance", label: "Finance", icon: <AdminIcons.Finance />, component: null },
+  { id: "announcements", label: "Announcements", icon: <AdminIcons.Announcements />, component: null },
+  { id: "settings", label: "Settings", icon: <AdminIcons.Settings />, component: null },
 ];
 
 const Home = () => {
@@ -831,6 +832,7 @@ const Home = () => {
         activeMenu={selectedMenu}
         onMenuChange={handleMenuClick}
         menuItems={MENU_ITEMS}
+        userType="admin"
       />
 
       {/* Orange Topbar */}
@@ -850,7 +852,9 @@ const Home = () => {
             🔔
           </div>
             <div className="topbar-icon" data-tooltip="Logout" onClick={handleLogout}>
-              🚪
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="white" xmlns="http://www.w3.org/2000/svg">
+             <path d="M10 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H10C11.1 21 12 20.1 12 19V17H10V19H5V5H10V7H12V5C12 3.9 11.1 3 10 3ZM14 8L12.59 9.41L14.17 11H8V13H14.17L12.59 14.59L14 16L18 12L14 8Z"/>
+            </svg>
           </div>
         </div>
       </div>

@@ -16,16 +16,17 @@ import FeeVoucher from "./FeeVoucher";
 import Exam from "../Exam";
 import ViewMarks from "./ViewMarks";
 import { useNavigate, useLocation } from "react-router-dom";
+import StudentIcons from "../../components/StudentIcons";
 
 // Exact module names from Concordia College CMS PDF Page 2
 const MENU_ITEMS = [
-  { id: "profile", label: "Profile", icon: "👤", component: null },
-  { id: "course", label: "Course", icon: "📚", component: Course },
-  { id: "timetable", label: "TimeTable", icon: "📅", component: Timetable },
-  { id: "datesheet", label: "DateSheet", icon: "📋", component: DateSheet },
-  { id: "calender", label: "Calender", icon: "�", component: Calender },
-  { id: "feedback", label: "FeedBack", icon: "💬", component: FeedBack },
-  { id: "feevoucher", label: "Fee Voucher", icon: "💰", component: FeeVoucher },
+  { id: "profile", label: "Profile", icon: <StudentIcons.Profile />, component: null },
+  { id: "course", label: "Course", icon: <StudentIcons.Course />, component: Course },
+  { id: "timetable", label: "TimeTable", icon: <StudentIcons.Timetable />, component: Timetable },
+  { id: "datesheet", label: "DateSheet", icon: <StudentIcons.DateSheet />, component: DateSheet },
+  { id: "calender", label: "Calender", icon: <StudentIcons.Calendar />, component: Calender },
+  { id: "feedback", label: "FeedBack", icon: <StudentIcons.Feedback />, component: FeedBack },
+  { id: "feevoucher", label: "Fee Voucher", icon: <StudentIcons.FeeVoucher />, component: FeeVoucher },
 ];
 
 const Home = () => {
@@ -157,6 +158,7 @@ const Home = () => {
         activeMenu={selectedMenu}
         onMenuChange={handleMenuClick}
         menuItems={MENU_ITEMS}
+        userType="student"
       />
 
       {/* Orange Topbar */}
@@ -178,9 +180,11 @@ const Home = () => {
           <div className="topbar-icon" title="Notifications">
             🔔
           </div>
-          <div className="topbar-icon" onClick={handleLogout} title="Profile">
-            <div className="avatar-circle" style={{width:36,height:36, background:'#fff', color:'#f28300', fontWeight:700, display:'flex', alignItems:'center', justifyContent:'center'}}> {profileData?.firstName?.charAt(0)?.toUpperCase() || 'S'}</div>
-          </div>
+            <div className="topbar-icon" title="Logout" onClick={handleLogout}>
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H10C11.1 21 12 20.1 12 19V17H10V19H5V5H10V7H12V5C12 3.9 11.1 3 10 3ZM14 8L12.59 9.41L14.17 11H8V13H14.17L12.59 14.59L14 16L18 12L14 8Z"/>
+              </svg>
+            </div>
         </div>
       </div>
     

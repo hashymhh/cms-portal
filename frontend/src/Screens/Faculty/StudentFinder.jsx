@@ -100,15 +100,154 @@ const StudentFinder = () => {
 
   return (
     <div className="w-full mx-auto mt-10 flex justify-center items-start flex-col mb-10">
+      <style>{`
+        .search-form-panel { 
+          background:linear-gradient(145deg,#fff7ee,#ffe9d1); 
+          padding:24px; 
+          border-radius:18px; 
+          border:1px solid #ffe0c2; 
+          box-shadow:0 4px 18px rgba(242,131,0,0.15); 
+          margin:24px auto; 
+        }
+        .search-filter-label { 
+          display:block; 
+          font-size:13px; 
+          font-weight:700; 
+          color:#8a5a15; 
+          margin-bottom:8px; 
+          letter-spacing:.3px; 
+        }
+        .search-filter-input { 
+          width:100%; 
+          padding:12px 16px; 
+          border:2px solid #f3e2cc; 
+          border-radius:12px; 
+          background:linear-gradient(160deg,#ffffff,#fffbf5); 
+          color:#2f2f2f; 
+          font-weight:500; 
+          transition:all .3s; 
+        }
+        .search-filter-input:focus { 
+          outline:none; 
+          border-color:#f28300; 
+          box-shadow:0 0 0 4px rgba(242,131,0,0.15); 
+        }
+        .results-table { 
+          width:100%; 
+          background:linear-gradient(160deg,#ffffff,#fffaf3); 
+          border-radius:16px; 
+          overflow:hidden; 
+          box-shadow:0 6px 22px -8px rgba(0,0,0,.12); 
+          border:1px solid #f3e2cc; 
+        }
+        .results-table thead tr { 
+          background:linear-gradient(135deg,#f28300,#ff9d4d); 
+          color:#fff; 
+        }
+        .results-table th { 
+          padding:14px 20px; 
+          text-align:left; 
+          font-weight:700; 
+          letter-spacing:.3px; 
+        }
+        .results-table td { 
+          padding:12px 20px; 
+          border-bottom:1px solid #f0e6d8; 
+          color:#374151; 
+          font-weight:500; 
+        }
+        .results-table tbody tr { 
+          transition:all .3s; 
+          cursor:pointer; 
+        }
+        .results-table tbody tr:hover { 
+          background:linear-gradient(145deg,#fff5e6,#ffe4cc); 
+          transform:scale(1.002); 
+        }
+        .profile-img { 
+          width:48px; 
+          height:48px; 
+          object-fit:cover; 
+          border-radius:50%; 
+          border:2px solid #f3e2cc; 
+        }
+        .empty-state { 
+          text-align:center; 
+          padding:40px 24px; 
+          background:linear-gradient(145deg,#fff7ee,#ffe9d1); 
+          border-radius:16px; 
+          margin-top:32px; 
+        }
+        .empty-state-img { 
+          width:256px; 
+          height:256px; 
+          margin:0 auto 16px; 
+        }
+        .empty-state-text { 
+          color:#8a5a15; 
+          font-weight:600; 
+          font-size:15px; 
+        }
+        .modal-overlay { 
+          position:fixed; 
+          inset:0; 
+          background:rgba(0,0,0,0.5); 
+          display:flex; 
+          align-items:center; 
+          justify-center; 
+          padding:16px; 
+          z-index:50; 
+        }
+        .modal-content { 
+          background:linear-gradient(160deg,#ffffff,#fffaf3); 
+          border-radius:20px; 
+          padding:32px; 
+          max-width:1024px; 
+          width:100%; 
+          max-height:90vh; 
+          overflow-y:auto; 
+          box-shadow:0 20px 60px rgba(0,0,0,0.3); 
+        }
+        .modal-title { 
+          font-size:28px; 
+          font-weight:700; 
+          color:#d97200; 
+          margin-bottom:24px; 
+        }
+        .modal-section { 
+          background:linear-gradient(145deg,#fff7ee,#ffe9d1); 
+          padding:24px; 
+          border-radius:14px; 
+          border:1px solid #f3e2cc; 
+        }
+        .modal-section-title { 
+          font-size:18px; 
+          font-weight:700; 
+          color:#8a5a15; 
+          margin-bottom:16px; 
+        }
+        .modal-field { 
+          margin-bottom:10px; 
+        }
+        .modal-field-label { 
+          font-weight:600; 
+          color:#8a5a15; 
+          font-size:13px; 
+        }
+        .modal-field-value { 
+          color:#2f2f2f; 
+          font-weight:500; 
+        }
+      `}</style>
       <div className="flex justify-between items-center w-full">
         <Heading title="Student Finder" />
       </div>
 
       <div className="my-6 mx-auto w-full">
         <form onSubmit={searchStudents} className="flex items-center">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-[90%] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-[90%] mx-auto search-form-panel">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="search-filter-label">
                 Enrollment Number
               </label>
               <input
@@ -116,13 +255,13 @@ const StudentFinder = () => {
                 name="enrollmentNo"
                 value={searchParams.enrollmentNo}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="search-filter-input"
                 placeholder="Enter enrollment number"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="search-filter-label">
                 Name
               </label>
               <input
@@ -130,20 +269,20 @@ const StudentFinder = () => {
                 name="name"
                 value={searchParams.name}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="search-filter-input"
                 placeholder="Enter student name"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="search-filter-label">
                 Semester
               </label>
               <select
                 name="semester"
                 value={searchParams.semester}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="search-filter-input"
               >
                 <option value="">Select Semester</option>
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
@@ -155,14 +294,14 @@ const StudentFinder = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="search-filter-label">
                 Branch
               </label>
               <select
                 name="branch"
                 value={searchParams.branch}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="search-filter-input"
               >
                 <option value="">Select Branch</option>
                 {branches?.map((branch) => (
@@ -186,13 +325,13 @@ const StudentFinder = () => {
         </form>
 
         {!hasSearched && (
-          <div className="text-center mt-8 text-gray-600 flex flex-col items-center justify-center my-10 bg-white p-10 rounded-lg mx-auto w-[40%]">
+          <div className="empty-state mx-auto w-[40%]">
             <img
               src="/assets/filter.svg"
               alt="Select filters"
-              className="w-64 h-64 mb-4"
+              className="empty-state-img"
             />
-            Please select at least one filter to search students
+            <p className="empty-state-text">Please select at least one filter to search students</p>
           </div>
         )}
 
@@ -202,51 +341,48 @@ const StudentFinder = () => {
 
         {students.length > 0 && (
           <div className="mt-8">
-            <h2 className="text-xl font-semibold mb-4">Search Results</h2>
+            <h2 className="text-xl font-semibold mb-4" style={{color:'#d97200'}}>Search Results</h2>
             <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border border-gray-300">
+              <table className="results-table">
                 <thead>
-                  <tr className="bg-gray-100">
-                    <th className="px-6 py-3 border-b text-left">Profile</th>
-                    <th className="px-6 py-3 border-b text-left">Name</th>
-                    <th className="px-6 py-3 border-b text-left">
-                      Enrollment No
-                    </th>
-                    <th className="px-6 py-3 border-b text-left">Semester</th>
-                    <th className="px-6 py-3 border-b text-left">Branch</th>
-                    <th className="px-6 py-3 border-b text-left">Email</th>
+                  <tr>
+                    <th>Profile</th>
+                    <th>Name</th>
+                    <th>Enrollment No</th>
+                    <th>Semester</th>
+                    <th>Branch</th>
+                    <th>Email</th>
                   </tr>
                 </thead>
                 <tbody>
                   {students.map((student) => (
                     <tr
                       key={student._id}
-                      className="hover:bg-gray-50 cursor-pointer"
                       onClick={() => handleRowClick(student)}
                     >
-                      <td className="px-6 py-4 border-b">
+                      <td>
                         <img
                           src={`${process.env.REACT_APP_MEDIA_LINK}/${student.profile}`}
                           alt={`${student.firstName}'s profile`}
-                          className="w-12 h-12 object-cover rounded-full"
+                          className="profile-img"
                           onError={(e) => {
                             e.target.src =
                               "https://images.unsplash.com/photo-1744315900478-fa44dc6a4e89?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
                           }}
                         />
                       </td>
-                      <td className="px-6 py-4 border-b">
+                      <td>
                         {student.firstName} {student.middleName}{" "}
                         {student.lastName}
                       </td>
-                      <td className="px-6 py-4 border-b">
+                      <td>
                         {student.enrollmentNo}
                       </td>
-                      <td className="px-6 py-4 border-b">{student.semester}</td>
-                      <td className="px-6 py-4 border-b">
+                      <td>{student.semester}</td>
+                      <td>
                         {student.branchId?.name}
                       </td>
-                      <td className="px-6 py-4 border-b">{student.email}</td>
+                      <td>{student.email}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -256,10 +392,10 @@ const StudentFinder = () => {
         )}
 
         {showModal && selectedStudent && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="modal-overlay">
+            <div className="modal-content">
               <div className="flex justify-between items-start mb-6">
-                <h2 className="text-2xl font-bold">Student Details</h2>
+                <h2 className="modal-title">Student Details</h2>
                 <CustomButton
                   onClick={() => setShowModal(false)}
                   variant="secondary"
@@ -286,6 +422,7 @@ const StudentFinder = () => {
                     src={`${process.env.REACT_APP_MEDIA_LINK}/${selectedStudent.profile}`}
                     alt={`${selectedStudent.firstName}'s profile`}
                     className="w-full h-auto object-cover rounded-lg"
+                    style={{border:'2px solid #f3e2cc',boxShadow:'0 6px 20px rgba(242,131,0,0.2)'}}
                     onError={(e) => {
                       e.target.src =
                         "https://images.unsplash.com/photo-1744315900478-fa44dc6a4e89?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
@@ -294,112 +431,112 @@ const StudentFinder = () => {
                 </div>
 
                 <div className="w-full md:w-2/3">
-                  <h3 className="text-xl font-semibold mb-4">
+                  <h3 className="modal-section-title">
                     Personal Information
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <p>
-                      <span className="font-medium">Full Name:</span>{" "}
-                      {selectedStudent.firstName} {selectedStudent.middleName}{" "}
-                      {selectedStudent.lastName}
+                    <p className="modal-field">
+                      <span className="modal-field-label">Full Name:</span>{" "}
+                      <span className="modal-field-value">{selectedStudent.firstName} {selectedStudent.middleName}{" "}
+                      {selectedStudent.lastName}</span>
                     </p>
-                    <p>
-                      <span className="font-medium">Gender:</span>{" "}
-                      {selectedStudent.gender}
+                    <p className="modal-field">
+                      <span className="modal-field-label">Gender:</span>{" "}
+                      <span className="modal-field-value">{selectedStudent.gender}</span>
                     </p>
-                    <p>
-                      <span className="font-medium">Date of Birth:</span>{" "}
-                      {new Date(selectedStudent.dob).toLocaleDateString()}
+                    <p className="modal-field">
+                      <span className="modal-field-label">Date of Birth:</span>{" "}
+                      <span className="modal-field-value">{new Date(selectedStudent.dob).toLocaleDateString()}</span>
                     </p>
-                    <p>
-                      <span className="font-medium">Blood Group:</span>{" "}
-                      {selectedStudent.bloodGroup}
+                    <p className="modal-field">
+                      <span className="modal-field-label">Blood Group:</span>{" "}
+                      <span className="modal-field-value">{selectedStudent.bloodGroup}</span>
                     </p>
                   </div>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="bg-gray-50 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-4">
+                <div className="modal-section">
+                  <h3 className="modal-section-title">
                     Academic Information
                   </h3>
                   <div className="space-y-2">
-                    <p>
-                      <span className="font-medium">Enrollment No:</span>{" "}
-                      {selectedStudent.enrollmentNo}
+                    <p className="modal-field">
+                      <span className="modal-field-label">Enrollment No:</span>{" "}
+                      <span className="modal-field-value">{selectedStudent.enrollmentNo}</span>
                     </p>
-                    <p>
-                      <span className="font-medium">Branch:</span>{" "}
-                      {selectedStudent.branchId?.name}
+                    <p className="modal-field">
+                      <span className="modal-field-label">Branch:</span>{" "}
+                      <span className="modal-field-value">{selectedStudent.branchId?.name}</span>
                     </p>
-                    <p>
-                      <span className="font-medium">Semester:</span>{" "}
-                      {selectedStudent.semester}
+                    <p className="modal-field">
+                      <span className="modal-field-label">Semester:</span>{" "}
+                      <span className="modal-field-value">{selectedStudent.semester}</span>
                     </p>
                   </div>
                 </div>
 
-                <div className="bg-gray-50 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-4">
+                <div className="modal-section">
+                  <h3 className="modal-section-title">
                     Contact Information
                   </h3>
                   <div className="space-y-2">
-                    <p>
-                      <span className="font-medium">Email:</span>{" "}
-                      {selectedStudent.email}
+                    <p className="modal-field">
+                      <span className="modal-field-label">Email:</span>{" "}
+                      <span className="modal-field-value">{selectedStudent.email}</span>
                     </p>
-                    <p>
-                      <span className="font-medium">Phone:</span>{" "}
-                      {selectedStudent.phone}
+                    <p className="modal-field">
+                      <span className="modal-field-label">Phone:</span>{" "}
+                      <span className="modal-field-value">{selectedStudent.phone}</span>
                     </p>
-                    <p>
-                      <span className="font-medium">Address:</span>{" "}
-                      {selectedStudent.address}
+                    <p className="modal-field">
+                      <span className="modal-field-label">Address:</span>{" "}
+                      <span className="modal-field-value">{selectedStudent.address}</span>
                     </p>
                   </div>
                 </div>
 
-                <div className="bg-gray-50 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-4">
+                <div className="modal-section">
+                  <h3 className="modal-section-title">
                     Location Details
                   </h3>
                   <div className="space-y-2">
-                    <p>
-                      <span className="font-medium">City:</span>{" "}
-                      {selectedStudent.city}
+                    <p className="modal-field">
+                      <span className="modal-field-label">City:</span>{" "}
+                      <span className="modal-field-value">{selectedStudent.city}</span>
                     </p>
-                    <p>
-                      <span className="font-medium">State:</span>{" "}
-                      {selectedStudent.state}
+                    <p className="modal-field">
+                      <span className="modal-field-label">State:</span>{" "}
+                      <span className="modal-field-value">{selectedStudent.state}</span>
                     </p>
-                    <p>
-                      <span className="font-medium">Pincode:</span>{" "}
-                      {selectedStudent.pincode}
+                    <p className="modal-field">
+                      <span className="modal-field-label">Pincode:</span>{" "}
+                      <span className="modal-field-value">{selectedStudent.pincode}</span>
                     </p>
-                    <p>
-                      <span className="font-medium">Country:</span>{" "}
-                      {selectedStudent.country}
+                    <p className="modal-field">
+                      <span className="modal-field-label">Country:</span>{" "}
+                      <span className="modal-field-value">{selectedStudent.country}</span>
                     </p>
                   </div>
                 </div>
 
-                <div className="bg-gray-50 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-4">
+                <div className="modal-section">
+                  <h3 className="modal-section-title">
                     Emergency Contact
                   </h3>
                   <div className="space-y-2">
-                    <p>
-                      <span className="font-medium">Name:</span>{" "}
-                      {selectedStudent.emergencyContact?.name}
+                    <p className="modal-field">
+                      <span className="modal-field-label">Name:</span>{" "}
+                      <span className="modal-field-value">{selectedStudent.emergencyContact?.name}</span>
                     </p>
-                    <p>
-                      <span className="font-medium">Relationship:</span>{" "}
-                      {selectedStudent.emergencyContact?.relationship}
+                    <p className="modal-field">
+                      <span className="modal-field-label">Relationship:</span>{" "}
+                      <span className="modal-field-value">{selectedStudent.emergencyContact?.relationship}</span>
                     </p>
-                    <p>
-                      <span className="font-medium">Phone:</span>{" "}
-                      {selectedStudent.emergencyContact?.phone}
+                    <p className="modal-field">
+                      <span className="modal-field-label">Phone:</span>{" "}
+                      <span className="modal-field-value">{selectedStudent.emergencyContact?.phone}</span>
                     </p>
                   </div>
                 </div>

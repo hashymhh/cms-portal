@@ -231,6 +231,158 @@ const Material = () => {
 
   return (
     <div className="w-full mx-auto mt-10 flex justify-center items-start flex-col mb-10">
+      <style>{`
+        .material-filters { 
+          background:linear-gradient(145deg,#fff7ee,#ffe9d1); 
+          padding:24px; 
+          border-radius:18px; 
+          border:1px solid #ffe0c2; 
+          box-shadow:0 4px 18px rgba(242,131,0,0.15); 
+          margin-top:16px;
+          margin-bottom:32px; 
+        }
+        .filter-label { 
+          display:block; 
+          font-size:13px; 
+          font-weight:700; 
+          color:#8a5a15; 
+          margin-bottom:8px; 
+          letter-spacing:.3px; 
+        }
+        .filter-select { 
+          width:100%; 
+          padding:12px 16px; 
+          border:2px solid #f3e2cc; 
+          border-radius:12px; 
+          background:linear-gradient(160deg,#ffffff,#fffbf5); 
+          color:#2f2f2f; 
+          font-weight:500; 
+          transition:all .3s; 
+          box-shadow:0 2px 8px rgba(0,0,0,0.04); 
+        }
+        .filter-select:focus { 
+          outline:none; 
+          border-color:#f28300; 
+          box-shadow:0 0 0 4px rgba(242,131,0,0.15); 
+        }
+        .materials-table { 
+          width:100%; 
+          background:linear-gradient(160deg,#ffffff,#fffaf3); 
+          border-radius:16px; 
+          overflow:hidden; 
+          box-shadow:0 6px 22px -8px rgba(0,0,0,.12); 
+          border:1px solid #f3e2cc; 
+        }
+        .materials-table thead tr { 
+          background:linear-gradient(135deg,#f28300,#ff9d4d); 
+          color:#fff; 
+        }
+        .materials-table th { 
+          padding:16px 24px; 
+          text-align:left; 
+          font-weight:700; 
+          letter-spacing:.3px; 
+        }
+        .materials-table td { 
+          padding:14px 24px; 
+          border-bottom:1px solid #f0e6d8; 
+          color:#374151; 
+          font-weight:500; 
+        }
+        .materials-table tbody tr { 
+          transition:all .3s; 
+        }
+        .materials-table tbody tr:hover { 
+          background:linear-gradient(145deg,#fff5e6,#ffe4cc); 
+          transform:scale(1.005); 
+        }
+        .empty-state { 
+          text-align:center; 
+          padding:32px 24px; 
+          color:#8a5a15; 
+          font-weight:600; 
+          font-size:16px; 
+        }
+        .modal-overlay { 
+          position:fixed; 
+          inset:0; 
+          background:rgba(0,0,0,0.5); 
+          display:flex; 
+          align-items:center; 
+          justify-center; 
+          padding:16px; 
+          z-index:50; 
+        }
+        .modal-content { 
+          background:linear-gradient(160deg,#ffffff,#fffaf3); 
+          border-radius:20px; 
+          padding:24px; 
+          max-width:768px; 
+          width:100%; 
+          box-shadow:0 20px 60px rgba(0,0,0,0.3); 
+        }
+        .modal-header { 
+          display:flex; 
+          justify-content:space-between; 
+          align-items:center; 
+          margin-bottom:16px; 
+        }
+        .modal-title { 
+          font-size:22px; 
+          font-weight:700; 
+          color:#d97200; 
+        }
+        .form-field { 
+          margin-bottom:16px; 
+        }
+        .form-label { 
+          display:block; 
+          font-size:13px; 
+          font-weight:700; 
+          color:#8a5a15; 
+          margin-bottom:8px; 
+          letter-spacing:.3px; 
+        }
+        .form-input { 
+          width:100%; 
+          padding:12px 16px; 
+          border:2px solid #f3e2cc; 
+          border-radius:12px; 
+          background:linear-gradient(160deg,#ffffff,#fffbf5); 
+          color:#2f2f2f; 
+          font-weight:500; 
+          transition:all .3s; 
+        }
+        .form-input:focus { 
+          outline:none; 
+          border-color:#f28300; 
+          box-shadow:0 0 0 4px rgba(242,131,0,0.15); 
+        }
+        .file-upload-label { 
+          flex:1; 
+          padding:12px 16px; 
+          border:2px solid #f3e2cc; 
+          border-radius:12px; 
+          cursor:pointer; 
+          background:linear-gradient(145deg,#fff7ee,#ffe9d1); 
+          transition:all .3s; 
+          display:flex; 
+          align-items:center; 
+          justify-content:center; 
+          font-weight:500; 
+          color:#8a5a15; 
+        }
+        .file-upload-label:hover { 
+          background:linear-gradient(135deg,#ffe9d1,#ffd9b8); 
+          border-color:#f28300; 
+        }
+        .form-actions { 
+          display:flex; 
+          justify-content:flex-end; 
+          gap:16px; 
+          margin-top:24px; 
+        }
+      `}</style>
       <div className="flex justify-between items-center w-full">
         <Heading title="Material Management" />
         <CustomButton onClick={() => setShowModal(true)}>
@@ -239,17 +391,17 @@ const Material = () => {
       </div>
 
       {/* Filters */}
-      <div className="w-full mt-4">
+      <div className="w-full material-filters">
         <div className="grid grid-cols-4 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="filter-label">
               Filter by Subject
             </label>
             <select
               name="subject"
               value={filters.subject}
               onChange={handleFilterChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="filter-select"
             >
               <option value="">All Subjects</option>
               {subjects.map((subject) => (
@@ -261,14 +413,14 @@ const Material = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="filter-label">
               Filter by Branch
             </label>
             <select
               name="branch"
               value={filters.branch}
               onChange={handleFilterChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="filter-select"
             >
               <option value="">All Branches</option>
               {branches.map((branch) => (
@@ -280,14 +432,14 @@ const Material = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="filter-label">
               Filter by Semester
             </label>
             <select
               name="semester"
               value={filters.semester}
               onChange={handleFilterChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="filter-select"
             >
               <option value="">All Semesters</option>
               {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
@@ -299,14 +451,14 @@ const Material = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="filter-label">
               Filter by Type
             </label>
             <select
               name="type"
               value={filters.type}
               onChange={handleFilterChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="filter-select"
             >
               <option value="">All Types</option>
               <option value="notes">Notes</option>
@@ -321,26 +473,26 @@ const Material = () => {
       {/* Materials Table */}
       <div className="w-full mt-8 overflow-x-auto">
         {materials.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="empty-state">
             No materials found
           </div>
         ) : (
-          <table className="text-sm min-w-full bg-white">
+          <table className="text-sm materials-table">
             <thead>
-              <tr className="bg-blue-500 text-white">
-                <th className="py-4 px-6 text-left font-semibold">File</th>
-                <th className="py-4 px-6 text-left font-semibold">Title</th>
-                <th className="py-4 px-6 text-left font-semibold">Subject</th>
-                <th className="py-4 px-6 text-left font-semibold">Semester</th>
-                <th className="py-4 px-6 text-left font-semibold">Branch</th>
-                <th className="py-4 px-6 text-left font-semibold">Type</th>
-                <th className="py-4 px-6 text-left font-semibold">Actions</th>
+              <tr>
+                <th>File</th>
+                <th>Title</th>
+                <th>Subject</th>
+                <th>Semester</th>
+                <th>Branch</th>
+                <th>Type</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {materials.map((material) => (
-                <tr key={material._id} className="border-b hover:bg-blue-50">
-                  <td className="py-4 px-6">
+                <tr key={material._id}>
+                  <td>
                     <CustomButton
                       variant="primary"
                       onClick={() => {
@@ -352,12 +504,12 @@ const Material = () => {
                       <MdLink className="text-xl" />
                     </CustomButton>
                   </td>
-                  <td className="py-4 px-6">{material.title}</td>
-                  <td className="py-4 px-6">{material.subject.name}</td>
-                  <td className="py-4 px-6">{material.semester}</td>
-                  <td className="py-4 px-6">{material.branch.name}</td>
-                  <td className="py-4 px-6 capitalize">{material.type}</td>
-                  <td className="py-4 px-6">
+                  <td>{material.title}</td>
+                  <td>{material.subject.name}</td>
+                  <td>{material.semester}</td>
+                  <td>{material.branch.name}</td>
+                  <td className="capitalize">{material.type}</td>
+                  <td>
                     <div className="flex gap-4">
                       <CustomButton
                         variant="secondary"
@@ -385,10 +537,10 @@ const Material = () => {
 
       {/* Add/Edit Material Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h2 className="modal-title">
                 {editingMaterial ? "Edit Material" : "Add New Material"}
               </h2>
               <CustomButton
@@ -403,8 +555,8 @@ const Material = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+              <div className="form-field">
+                <label className="form-label">
                   Title
                 </label>
                 <input
@@ -412,21 +564,21 @@ const Material = () => {
                   name="title"
                   value={formData.title}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="form-input"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                <div className="form-field">
+                  <label className="form-label">
                     Subject
                   </label>
                   <select
                     name="subject"
                     value={formData.subject}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="form-input"
                     required
                   >
                     <option value="">Select Subject</option>
@@ -438,15 +590,15 @@ const Material = () => {
                   </select>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                <div className="form-field">
+                  <label className="form-label">
                     Branch
                   </label>
                   <select
                     name="branch"
                     value={formData.branch}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="form-input"
                     required
                   >
                     <option value="">Select Branch</option>
@@ -458,15 +610,15 @@ const Material = () => {
                   </select>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                <div className="form-field">
+                  <label className="form-label">
                     Semester
                   </label>
                   <select
                     name="semester"
                     value={formData.semester}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="form-input"
                     required
                   >
                     <option value="">Select Semester</option>
@@ -478,15 +630,15 @@ const Material = () => {
                   </select>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                <div className="form-field">
+                  <label className="form-label">
                     Type
                   </label>
                   <select
                     name="type"
                     value={formData.type}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="form-input"
                     required
                   >
                     <option value="notes">Notes</option>
@@ -497,12 +649,12 @@ const Material = () => {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+              <div className="form-field">
+                <label className="form-label">
                   Material File
                 </label>
                 <div className="flex items-center space-x-4">
-                  <label className="flex-1 px-4 py-2 border rounded-md cursor-pointer hover:bg-gray-50">
+                  <label className="file-upload-label">
                     <span className="flex items-center justify-center">
                       <FiUpload className="mr-2" />
                       {file ? file.name : "Choose File"}
@@ -526,7 +678,7 @@ const Material = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-4 mt-6">
+              <div className="form-actions">
                 <CustomButton
                   onClick={() => {
                     setShowModal(false);

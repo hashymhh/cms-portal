@@ -5,15 +5,16 @@ import { useDispatch } from "react-redux";
 import { setUserData } from "../../redux/actions";
 import axiosWrapper from "../../utils/AxiosWrapper";
 import { useNavigate, useLocation } from "react-router-dom";
+import FacultyIcons from "../../components/FacultyIcons";
 
-// Faculty panel menu items with emoji icons
+// Faculty panel menu items with professional SVG icons
 const MENU_ITEMS = [
-  { id: "profile", label: "Profile", icon: "👤" },
-  { id: "courses", label: "Course Modules", icon: "📚" },
-  { id: "schedule", label: "Lecture Schedule", icon: "📅" },
-  { id: "attendance", label: "Attendance", icon: "📋" },
-  { id: "datesheet", label: "Datesheet", icon: "📄" },
-  { id: "students", label: "Students List", icon: "👥" },
+  { id: "profile", label: "Profile", icon: <FacultyIcons.Profile /> },
+  { id: "courses", label: "Course Modules", icon: <FacultyIcons.Course /> },
+  { id: "schedule", label: "Lecture Schedule", icon: <FacultyIcons.Schedule /> },
+  { id: "attendance", label: "Attendance", icon: <FacultyIcons.Attendance /> },
+  { id: "datesheet", label: "Datesheet", icon: <FacultyIcons.DateSheet /> },
+  { id: "students", label: "Students List", icon: <FacultyIcons.Students /> },
 ];
 
 const Home = () => {
@@ -423,72 +424,68 @@ const Home = () => {
     }
 
     return (
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
-        {/* Profile Header */}
-        <div className="ui-card fade-in" style={{ overflow: "hidden", marginBottom: "30px", borderTop: '4px solid #f28300' }}>
-          <div style={{ padding: "20px 30px" }}>
-            <h1 style={{ color: "#111827", fontSize: "28px", fontWeight: "700", margin: 0 }}>Profile</h1>
-            <div style={{ fontSize:12, color:'#6b7280', marginTop:6 }}>Manage your personal and employment information</div>
-          </div>
+      <div className="faculty-profile-container">
+        <style>{`
+          .faculty-profile-container { max-width:1200px; margin:0 auto; padding:24px; }
+          .faculty-profile-header { position:relative; background:linear-gradient(135deg,#f28300,#ff9d4d); padding:30px 40px; border-radius:22px; color:#fff; box-shadow:0 6px 26px -8px rgba(242,131,0,.55),0 3px 8px rgba(0,0,0,.12); margin-bottom:34px; overflow:hidden; }
+          .faculty-profile-header:after { content:''; position:absolute; inset:0; background:radial-gradient(circle at 80% 25%, rgba(255,255,255,.35), transparent 60%); }
+          .faculty-panels { display:grid; grid-template-columns:repeat(auto-fit,minmax(360px,1fr)); gap:34px; }
+          .faculty-panel { position:relative; background:linear-gradient(160deg,#ffffff 0%,#fffaf3 92%); border:1px solid #f3e2cc; border-radius:22px; padding:34px 36px 36px; box-shadow:0 6px 24px -8px rgba(0,0,0,.12); transition:transform .35s, box-shadow .35s; overflow:hidden; }
+          .faculty-panel:before { content:''; position:absolute; top:-70px; right:-70px; width:180px; height:180px; background:linear-gradient(135deg,rgba(242,131,0,.35),rgba(255,157,77,.45)); filter:blur(46px); opacity:.4; }
+          .faculty-panel:hover { transform:translateY(-6px); box-shadow:0 14px 36px -10px rgba(242,131,0,.35),0 6px 14px rgba(0,0,0,.08); }
+          .faculty-panel h2 { font-size:20px; font-weight:700; color:#d97200; margin:0 0 22px; padding-bottom:14px; border-bottom:2px solid #ffe4cc; display:flex; align-items:center; gap:10px; }
+          .faculty-panel h2:before { content:''; width:10px; height:10px; background:#f28300; border-radius:3px; box-shadow:0 0 0 4px rgba(242,131,0,.25); }
+          .faculty-avatar { width:130px; height:130px; border-radius:50%; background:#fff; border:6px solid rgba(255,255,255,.65); box-shadow:0 10px 30px -8px rgba(242,131,0,.55),0 4px 12px rgba(0,0,0,.12), inset 0 0 0 4px rgba(255,255,255,.6); display:flex; align-items:center; justify-content:center; font-size:54px; font-weight:700; color:#f28300; position:relative; overflow:hidden; }
+          .faculty-avatar[data-has-image='true'] { background-size:cover; background-position:center; color:transparent; }
+          .faculty-avatar:after { content:''; position:absolute; inset:0; background:radial-gradient(circle at 28% 28%, rgba(255,255,255,.4), transparent 70%); }
+          .center-fields { display:flex; flex-direction:column; gap:26px; align-items:center; }
+          .field-block { width:100%; text-align:center; }
+          .field-label { display:block; font-size:13px; font-weight:600; color:#6b5c4a; margin-bottom:6px; letter-spacing:.3px; }
+          .field-value { font-size:18px; font-weight:600; color:#2f2f2f; margin:0; }
+          .data-field { font-size:16px; font-weight:500; color:#333; margin:0; padding:12px 16px; background:#f8f9fa; border-radius:10px; border:1px solid #e0d6c5; }
+          @media (max-width:900px){ .faculty-panels{ grid-template-columns:1fr; } }
+        `}</style>
+
+        <div className="faculty-profile-header">
+          <h1 style={{margin:0,fontSize:30,fontWeight:700,letterSpacing:.5}}>Profile</h1>
+          <div style={{fontSize:13,marginTop:6,opacity:.9,fontWeight:500}}>Manage your personal and employment information</div>
         </div>
 
-        {/* Info Panels Container */}
-        <div style={{ display: "flex", gap: "30px", flexWrap: "wrap" }}>
-          {/* Personal Info Panel */}
-          <div style={{ background: "white", border: "2px solid #f28300", borderRadius: "12px", padding: "30px", flex: 1, minWidth: "300px" }}>
-            <h2 style={{ fontSize: "20px", fontWeight: "bold", color: "#333", marginBottom: "25px", paddingBottom: "10px", borderBottom: "2px solid #f28300" }}>
-              Personal Info
-            </h2>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "25px" }}>
-              {/* Profile Picture */}
-              <div className="avatar-circle" style={{width:120,height:120, border:'4px solid #fff', background: employeeData.profilePicture ? `url(${employeeData.profilePicture}) center/cover no-repeat` : '#fff'}}>
-                {!employeeData.profilePicture && (
-                  <div style={{color:'#f28300', fontSize:48, fontWeight:700}}>{employeeData.name?.charAt(0)?.toUpperCase() || 'F'}</div>
-                )}
+        <div className="faculty-panels">
+          <div className="faculty-panel">
+            <h2>Personal Info</h2>
+            <div className="center-fields">
+              <div
+                className="faculty-avatar"
+                data-has-image={employeeData.profilePicture ? 'true' : 'false'}
+                style={employeeData.profilePicture ? { backgroundImage:`url(${employeeData.profilePicture})` } : {}}
+              >
+                {!employeeData.profilePicture && (employeeData.name?.charAt(0)?.toUpperCase() || 'F')}
               </div>
-
-              {/* Name Field */}
-              <div style={{ width: "100%", textAlign: "center" }}>
-                <label style={{ display: "block", fontSize: "14px", fontWeight: "600", color: "#666", marginBottom: "8px" }}>Name</label>
-                <p style={{ fontSize: "18px", fontWeight: "500", color: "#333", margin: 0 }}>{employeeData.name}</p>
+              <div className="field-block">
+                <label className="field-label">Name</label>
+                <p className="field-value">{employeeData.name}</p>
               </div>
-
-              {/* Father's Name Field */}
-              <div style={{ width: "100%", textAlign: "center" }}>
-                <label style={{ display: "block", fontSize: "14px", fontWeight: "600", color: "#666", marginBottom: "8px" }}>Father's Name</label>
-                <p style={{ fontSize: "18px", fontWeight: "500", color: "#333", margin: 0 }}>{employeeData.fatherName}</p>
+              <div className="field-block">
+                <label className="field-label">Father's Name</label>
+                <p className="field-value">{employeeData.fatherName}</p>
               </div>
             </div>
           </div>
-
-          {/* Employee Information Panel */}
-          <div style={{ background: "white", border: "2px solid #f28300", borderRadius: "12px", padding: "30px", flex: 1, minWidth: "300px" }}>
-            <h2 style={{ fontSize: "20px", fontWeight: "bold", color: "#333", marginBottom: "25px", paddingBottom: "10px", borderBottom: "2px solid #f28300" }}>
-              Employee Information
-            </h2>
-            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-              {/* Employee No. */}
+          <div className="faculty-panel">
+            <h2>Employee Information</h2>
+            <div style={{display:'flex',flexDirection:'column',gap:'18px'}}>
               <div>
-                <label style={{ display: "block", fontSize: "14px", fontWeight: "600", color: "#666", marginBottom: "8px" }}>Employee No.</label>
-                <p style={{ fontSize: "16px", fontWeight: "normal", color: "#333", margin: 0, padding: "10px 15px", background: "#f8f9fa", borderRadius: "8px", border: "1px solid #e0e0e0" }}>
-                  {employeeData.employeeNo}
-                </p>
+                <label className="field-label" style={{textAlign:'left'}}>Employee No.</label>
+                <p className="data-field">{employeeData.employeeNo}</p>
               </div>
-
-              {/* Department */}
               <div>
-                <label style={{ display: "block", fontSize: "14px", fontWeight: "600", color: "#666", marginBottom: "8px" }}>Department</label>
-                <p style={{ fontSize: "16px", fontWeight: "normal", color: "#333", margin: 0, padding: "10px 15px", background: "#f8f9fa", borderRadius: "8px", border: "1px solid #e0e0e0" }}>
-                  {employeeData.department}
-                </p>
+                <label className="field-label" style={{textAlign:'left'}}>Department</label>
+                <p className="data-field">{employeeData.department}</p>
               </div>
-
-              {/* Designation */}
               <div>
-                <label style={{ display: "block", fontSize: "14px", fontWeight: "600", color: "#666", marginBottom: "8px" }}>Designation</label>
-                <p style={{ fontSize: "16px", fontWeight: "normal", color: "#333", margin: 0, padding: "10px 15px", background: "#f8f9fa", borderRadius: "8px", border: "1px solid #e0e0e0" }}>
-                  {employeeData.designation}
-                </p>
+                <label className="field-label" style={{textAlign:'left'}}>Designation</label>
+                <p className="data-field">{employeeData.designation}</p>
               </div>
             </div>
           </div>
@@ -500,67 +497,164 @@ const Home = () => {
   // Course Modules - Main View
   const renderCourseModulesMain = () => (
     <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+      <style>{`
+        .course-header-enhanced { 
+          position:relative; 
+          background:linear-gradient(135deg,#f28300,#ff9d4d); 
+          padding:28px 40px; 
+          border-radius:20px; 
+          color:#fff; 
+          box-shadow:0 6px 28px -6px rgba(242,131,0,0.45),0 2px 6px rgba(0,0,0,0.08); 
+          margin-bottom:32px; 
+          overflow:hidden; 
+        }
+        .course-header-enhanced:after { 
+          content:''; 
+          position:absolute; 
+          inset:0; 
+          background:radial-gradient(circle at 80% 25%, rgba(255,255,255,0.35), transparent 60%); 
+        }
+        .course-header-enhanced h1 { 
+          margin:0; 
+          font-size:30px; 
+          font-weight:700; 
+          letter-spacing:.5px; 
+          position:relative; 
+          z-index:1; 
+        }
+        .course-card-enhanced { 
+          position:relative; 
+          background:linear-gradient(160deg,#ffffff 0%,#fffaf3 92%); 
+          border:1px solid #f3e2cc; 
+          border-radius:20px; 
+          box-shadow:0 6px 24px -8px rgba(0,0,0,.12); 
+          overflow:hidden; 
+          margin-bottom:26px; 
+          transition:box-shadow .35s; 
+        }
+        .course-card-enhanced:hover { 
+          box-shadow:0 10px 32px -8px rgba(242,131,0,.28),0 6px 14px rgba(0,0,0,.08); 
+        }
+        .course-card-header { 
+          background:linear-gradient(145deg,#fff7ee,#ffe9d1); 
+          padding:24px 36px; 
+          display:flex; 
+          justify-content:space-between; 
+          align-items:center; 
+          cursor:pointer; 
+          border-bottom:2px solid transparent; 
+          transition:all .3s; 
+        }
+        .course-card-header.expanded { 
+          border-bottom-color:#f28300; 
+        }
+        .course-card-header:hover { 
+          background:linear-gradient(145deg,#fff5e6,#ffe4cc); 
+        }
+        .course-title-section { 
+          display:flex; 
+          align-items:center; 
+          gap:18px; 
+        }
+        .course-icon-box { 
+          font-size:38px; 
+          filter:drop-shadow(0 3px 8px rgba(242,131,0,0.3)); 
+        }
+        .course-title { 
+          font-size:22px; 
+          font-weight:700; 
+          color:#2f2f2f; 
+          margin:0; 
+          letter-spacing:.3px; 
+        }
+        .course-chevron { 
+          font-size:24px; 
+          color:#f28300; 
+          transition:transform .35s cubic-bezier(.4,0,.2,1); 
+        }
+        .course-chevron.rotated { 
+          transform:rotate(180deg); 
+        }
+        .submodules-container { 
+          padding:0 36px; 
+          display:none; 
+          gap:22px; 
+          flex-wrap:wrap; 
+          max-height:0; 
+          overflow:hidden; 
+          transition:max-height .4s ease, padding .4s ease; 
+        }
+        .submodules-container.expanded { 
+          display:flex; 
+          padding:32px 36px; 
+          max-height:1000px; 
+        }
+        .submodule-card { 
+          position:relative; 
+          background:linear-gradient(135deg,#f28300,#ff9d4d); 
+          color:#fff; 
+          padding:24px 32px; 
+          border-radius:16px; 
+          cursor:pointer; 
+          display:flex; 
+          align-items:center; 
+          gap:14px; 
+          font-size:18px; 
+          font-weight:600; 
+          transition:all .35s cubic-bezier(.4,0,.2,1); 
+          box-shadow:0 6px 20px -6px rgba(242,131,0,0.45),0 2px 6px rgba(0,0,0,0.08); 
+          overflow:hidden; 
+        }
+        .submodule-card:before { 
+          content:''; 
+          position:absolute; 
+          inset:0; 
+          background:radial-gradient(circle at 20% 50%, rgba(255,255,255,0.25), transparent 70%); 
+        }
+        .submodule-card:hover { 
+          background:linear-gradient(135deg,#d97200,#f28300); 
+          transform:translateY(-6px) scale(1.03); 
+          box-shadow:0 12px 32px -8px rgba(242,131,0,0.55),0 6px 14px rgba(0,0,0,0.12); 
+        }
+        .submodule-icon { 
+          font-size:32px; 
+          filter:drop-shadow(0 2px 6px rgba(0,0,0,0.2)); 
+          position:relative; 
+          z-index:1; 
+        }
+      `}</style>
       {/* Header */}
-      <div style={{ background: "#f28300", padding: "20px 30px", borderRadius: "12px", marginBottom: "30px" }}>
-        <h1 style={{ color: "white", fontSize: "28px", fontWeight: "bold", margin: 0 }}>Course Modules</h1>
+      <div className="course-header-enhanced">
+        <h1>Course Modules</h1>
       </div>
 
       {/* Course List */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+      <div style={{ display: "flex", flexDirection: "column" }}>
         {courseModules.map(course => (
-          <div key={course.id} className="ui-card" style={{ background: "white", borderRadius: "12px", border: "2px solid #f28300", overflow: "hidden" }}>
+          <div key={course.id} className="course-card-enhanced">
             {/* Course Header */}
             <div 
               onClick={() => handleCourseToggle(course.id)}
-              style={{
-                background: "#fff5e6",
-                padding: "20px 30px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                cursor: "pointer",
-                borderBottom: expandedCourse === course.id ? "2px solid #f28300" : "none"
-              }}
+              className={`course-card-header ${expandedCourse === course.id ? 'expanded' : ''}`}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-                <span style={{ fontSize: "32px" }}>{course.icon}</span>
-                <h2 style={{ fontSize: "22px", fontWeight: "bold", color: "#333", margin: 0 }}>{course.name}</h2>
+              <div className="course-title-section">
+                <span className="course-icon-box">{course.icon}</span>
+                <h2 className="course-title">{course.name}</h2>
               </div>
-              <span style={{ fontSize: "24px", color: "#f28300", transition: "transform 0.3s", transform: expandedCourse === course.id ? "rotate(180deg)" : "rotate(0deg)" }}>
+              <span className={`course-chevron ${expandedCourse === course.id ? 'rotated' : ''}`}>
                 ▼
               </span>
             </div>
 
             {/* Submodules */}
-            <div className="accordion" style={{ padding: expandedCourse === course.id ? '30px' : '0 30px', display: expandedCourse === course.id ? 'flex' : 'none', gap: '20px', flexWrap: 'wrap', maxHeight: expandedCourse === course.id ? '800px' : '0' }}>
+            <div className={`submodules-container ${expandedCourse === course.id ? 'expanded' : ''}`}>
               {expandedCourse === course.id && course.submodules.map(submodule => (
                 <div
                   key={submodule.id}
                   onClick={() => handleSubmoduleClick(submodule)}
-                  style={{
-                    background: "#f28300",
-                    color: "white",
-                    padding: "20px 30px",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10px",
-                    fontSize: "18px",
-                    fontWeight: "600",
-                    transition: "all 0.2s",
-                    boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)"
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "#d66d0a";
-                    e.currentTarget.style.transform = "translateY(-2px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "#f28300";
-                    e.currentTarget.style.transform = "translateY(0)";
-                  }}
+                  className="submodule-card"
                 >
-                  <span style={{ fontSize: "28px" }}>{submodule.icon}</span>
+                  <span className="submodule-icon">{submodule.icon}</span>
                   {submodule.name}
                 </div>
               ))}
@@ -1418,9 +1512,11 @@ const Home = () => {
           <div className="faculty-notification" title="Notifications">
             🔔
           </div>
-          <button className="faculty-logout-btn" onClick={handleLogout}>
-            Logout
-          </button>
+            <div className="faculty-notification" title="Logout" onClick={handleLogout}>
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H10C11.1 21 12 20.1 12 19V17H10V19H5V5H10V7H12V5C12 3.9 11.1 3 10 3ZM14 8L12.59 9.41L14.17 11H8V13H14.17L12.59 14.59L14 16L18 12L14 8Z"/>
+              </svg>
+            </div>
         </div>
       </div>
 

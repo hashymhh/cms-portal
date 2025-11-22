@@ -275,22 +275,163 @@ const AddMarks = () => {
 
   return (
     <div className="w-full mx-auto mt-10 flex justify-center items-start flex-col mb-10">
+      <style>{`
+        .search-panel { 
+          background:linear-gradient(145deg,#fff7ee,#ffe9d1); 
+          padding:32px; 
+          border-radius:20px; 
+          border:1px solid #ffe0c2; 
+          box-shadow:0 6px 20px rgba(242,131,0,0.2); 
+          margin-bottom:32px; 
+        }
+        .filter-label { 
+          display:block; 
+          font-size:13px; 
+          font-weight:700; 
+          color:#8a5a15; 
+          margin-bottom:8px; 
+          letter-spacing:.3px; 
+        }
+        .filter-select { 
+          width:100%; 
+          padding:12px 16px; 
+          border:2px solid #f3e2cc; 
+          border-radius:12px; 
+          background:linear-gradient(160deg,#ffffff,#fffbf5); 
+          color:#2f2f2f; 
+          font-weight:500; 
+          transition:all .3s; 
+          box-shadow:0 2px 8px rgba(0,0,0,0.04); 
+        }
+        .filter-select:focus { 
+          outline:none; 
+          border-color:#f28300; 
+          box-shadow:0 0 0 4px rgba(242,131,0,0.15); 
+        }
+        .filter-select:disabled { 
+          background:#f5f5f5; 
+          cursor:not-allowed; 
+          opacity:.6; 
+        }
+        .hint-text { 
+          font-size:11px; 
+          color:#8a5a15; 
+          margin-top:6px; 
+        }
+        .info-card { 
+          position:relative; 
+          background:linear-gradient(160deg,#ffffff,#fffaf3); 
+          border:1px solid #f3e2cc; 
+          padding:14px 18px; 
+          border-radius:14px; 
+          box-shadow:0 4px 16px rgba(0,0,0,0.08); 
+          overflow:hidden; 
+        }
+        .info-card:before { 
+          content:''; 
+          position:absolute; 
+          top:-40px; 
+          right:-40px; 
+          width:100px; 
+          height:100px; 
+          background:linear-gradient(135deg,rgba(242,131,0,0.2),rgba(255,157,77,0.25)); 
+          filter:blur(30px); 
+          opacity:.5; 
+        }
+        .info-label { 
+          font-size:12px; 
+          color:#8a5a15; 
+          font-weight:600; 
+          margin-bottom:4px; 
+        }
+        .info-value { 
+          color:#2f2f2f; 
+          font-weight:600; 
+          font-size:15px; 
+        }
+        .marks-input-card { 
+          display:flex; 
+          align-items:center; 
+          justify-content:space-between; 
+          width:100%; 
+          border:2px solid #f3e2cc; 
+          border-radius:12px; 
+          background:linear-gradient(160deg,#ffffff,#fffbf5); 
+          overflow:hidden; 
+          transition:all .3s; 
+        }
+        .marks-input-card:hover { 
+          border-color:#f28300; 
+          box-shadow:0 4px 16px rgba(242,131,0,0.15); 
+        }
+        .enrollment-label { 
+          font-weight:600; 
+          color:#2f2f2f; 
+          display:flex; 
+          align-items:center; 
+          justify-content:center; 
+          padding:0 18px; 
+          height:100%; 
+          min-width:120px; 
+          text-align:center; 
+          background:linear-gradient(135deg,#fff7ee,#ffe9d1); 
+          border-right:2px solid #f3e2cc; 
+        }
+        .marks-input { 
+          padding:12px 16px; 
+          border:none; 
+          border-radius:0; 
+          background:transparent; 
+          width:100%; 
+          margin:8px 12px; 
+          font-weight:500; 
+          color:#2f2f2f; 
+        }
+        .marks-input:focus { 
+          outline:none; 
+        }
+        .consent-section { 
+          display:flex; 
+          flex-direction:column; 
+          align-items:center; 
+          gap:20px; 
+          background:linear-gradient(145deg,#fff7ee,#ffe9d1); 
+          padding:24px; 
+          border-radius:16px; 
+          border:1px solid #ffe0c2; 
+          margin-top:40px; 
+        }
+        .consent-label { 
+          display:flex; 
+          align-items:center; 
+          gap:10px; 
+          font-size:14px; 
+          color:#2f2f2f; 
+          font-weight:500; 
+        }
+        .consent-checkbox { 
+          width:18px; 
+          height:18px; 
+          accent-color:#f28300; 
+          cursor:pointer; 
+        }
+      `}</style>
       <div className="flex justify-between items-center w-full">
         <Heading title="Add Marks" />
       </div>
 
       {showSearch && (
-        <div className="w-full bg-white rounded-lg p-6 mb-8">
+        <div className="w-full search-panel">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-[90%] mx-auto">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="filter-label">
                 Semester
               </label>
               <select
                 name="semester"
                 value={selectedSemester || ""}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="filter-select"
               >
                 <option value="">Select Semester</option>
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
@@ -302,14 +443,14 @@ const AddMarks = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="filter-label">
                 Branch
               </label>
               <select
                 name="branch"
                 value={selectedBranch?._id || ""}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="filter-select"
               >
                 <option value="">Select Branch</option>
                 {branches?.map((branch) => (
@@ -321,7 +462,7 @@ const AddMarks = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="filter-label">
                 Subjects
               </label>
               <select
@@ -329,9 +470,7 @@ const AddMarks = () => {
                 value={selectedSubject?._id || ""}
                 onChange={handleInputChange}
                 disabled={!selectedBranch}
-                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  !selectedBranch ? "bg-gray-100 cursor-not-allowed" : ""
-                }`}
+                className="filter-select"
               >
                 <option value="">Select Subject</option>
                 {subjects?.map((subject) => (
@@ -341,14 +480,14 @@ const AddMarks = () => {
                 ))}
               </select>
               {!selectedBranch && (
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="hint-text">
                   Please select a branch first
                 </p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="filter-label">
                 Exam
               </label>
               <select
@@ -356,9 +495,7 @@ const AddMarks = () => {
                 value={selectedExam?._id || ""}
                 onChange={handleInputChange}
                 disabled={!selectedSubject}
-                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  !selectedSubject ? "bg-gray-100 cursor-not-allowed" : ""
-                }`}
+                className="filter-select"
               >
                 <option value="">Select Exam</option>
                 {exams?.map((exam) => (
@@ -368,7 +505,7 @@ const AddMarks = () => {
                 ))}
               </select>
               {!selectedSubject && (
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="hint-text">
                   Please select a subject first
                 </p>
               )}
@@ -396,63 +533,63 @@ const AddMarks = () => {
 
       {/* Marks Entry Section */}
       {!showSearch && masterMarksData && masterMarksData.length > 0 && (
-        <div className="w-full bg-white rounded-lg p-6">
+        <div className="w-full search-panel">
           <div className="space-y-4 w-full mb-6">
             <div className="flex flex-col gap-4 w-[90%] mx-auto">
               <div className="grid grid-cols-4 gap-4">
-                <div className="border p-3 rounded-md shadow">
-                  <span className="text-sm text-gray-500">
+                <div className="info-card">
+                  <span className="info-label">
                     Branch and Semester:
                   </span>
-                  <p className="text-gray-800">
+                  <p className="info-value">
                     {selectedBranch?.branchId} - Semester {selectedSemester}
                   </p>
                 </div>
 
-                <div className="border p-3 rounded-md shadow">
-                  <span className="text-sm text-gray-500">Exam:</span>
-                  <p className="text-gray-800">
+                <div className="info-card">
+                  <span className="info-label">Exam:</span>
+                  <p className="info-value">
                     {selectedExam?.name || "Not Selected"}
                   </p>
                 </div>
-                <div className="border p-3 rounded-md shadow">
-                  <span className="text-sm text-gray-500">Exam Type:</span>
-                  <p className="text-gray-800">
+                <div className="info-card">
+                  <span className="info-label">Exam Type:</span>
+                  <p className="info-value">
                     {selectedExam?.examType === "mid" ? "Mid Term" : "End Term"}
                   </p>
                 </div>
-                <div className="border p-3 rounded-md shadow">
-                  <span className="text-sm text-gray-500">Subject:</span>
-                  <p className="text-gray-800">
+                <div className="info-card">
+                  <span className="info-label">Subject:</span>
+                  <p className="info-value">
                     {selectedSubject?.name || "Not Selected"}
                   </p>
                 </div>
               </div>
 
               <div className="grid grid-cols-4 gap-4">
-                <div className="border p-3 rounded-md shadow">
-                  <span className="text-sm text-gray-500">Total Marks:</span>
-                  <p className="text-gray-800">
+                <div className="info-card">
+                  <span className="info-label">Total Marks:</span>
+                  <p className="info-value">
                     {selectedExam?.totalMarks || "Not Selected"}
                   </p>
                 </div>
-                <div className="border p-3 rounded-md shadow">
-                  <span className="text-sm text-gray-500">Date:</span>
-                  <p className="text-gray-800">
+                <div className="info-card">
+                  <span className="info-label">Date:</span>
+                  <p className="info-value">
                     {selectedExam?.date
                       ? new Date(selectedExam.date).toLocaleDateString()
                       : "Not Selected"}
                   </p>
                 </div>
-                <div className="border p-3 rounded-md shadow">
-                  <span className="text-sm text-gray-500">Time:</span>
-                  <p className="text-gray-800">
+                <div className="info-card">
+                  <span className="info-label">Time:</span>
+                  <p className="info-value">
                     {selectedExam?.time || "Not Selected"}
                   </p>
                 </div>
-                <div className="border p-3 rounded-md shadow">
-                  <span className="text-sm text-gray-500">Students:</span>
-                  <p className="text-gray-800">
+                <div className="info-card">
+                  <span className="info-label">Students:</span>
+                  <p className="info-value">
                     {masterMarksData.length || "Not Selected"}
                   </p>
                 </div>
@@ -474,16 +611,16 @@ const AddMarks = () => {
             {masterMarksData.map((student) => (
               <div
                 key={student._id}
-                className="flex items-center justify-between w-full border rounded-md"
+                className="marks-input-card"
               >
-                <p className="font-medium text-gray-700 flex items-center justify-center px-3 h-full py-2 rounded-md min-w-[120px] text-center">
+                <p className="enrollment-label">
                   {student.enrollmentNo}
                 </p>
                 <input
                   type="number"
                   min={0}
                   max={selectedExam?.totalMarks || 100}
-                  className="px-4 py-2 border rounded-md focus:outline-none bg-gray-50 border-gray-200 focus:ring-2 focus:ring-blue-500 w-full m-2"
+                  className="marks-input"
                   value={marksData[student._id] || ""}
                   placeholder="Enter Marks"
                   onChange={(e) =>
@@ -497,16 +634,16 @@ const AddMarks = () => {
             ))}
           </div>
 
-          <div className="flex flex-col items-center gap-4 bottom-0 left-0 right-0 bg-white p-4 border-t mt-10">
-            <div className="flex items-center gap-2">
+          <div className="consent-section">
+            <div className="consent-label">
               <input
                 type="checkbox"
                 id="consent"
                 checked={consent}
                 onChange={(e) => setConsent(e.target.checked)}
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                className="consent-checkbox"
               />
-              <label htmlFor="consent" className="text-sm text-gray-700">
+              <label htmlFor="consent">
                 I confirm that all marks entered are correct and verified
               </label>
             </div>

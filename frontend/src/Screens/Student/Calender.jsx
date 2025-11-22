@@ -27,15 +27,88 @@ const Calender = () => {
   return (
     <div className="space-y-4">
       <style>{`
-        .card { background:#fff; border-radius:16px; box-shadow:0 1px 2px rgba(0,0,0,0.06); padding:18px; }
-        .title { color:#FF6B35; font-weight:800; font-size:28px; text-align:center; }
-        .subtitle { color:#6b7280; text-align:center; }
-        .calendar { width:100%; border-collapse:separate; border-spacing:0; margin-top:12px; }
-        .calendar th { background:#FF6B35; color:#fff; padding:10px; text-align:center; font-weight:800; }
-        .calendar td { width:14.285%; height:64px; border:1px solid #FFE0C8; background:#fff; vertical-align:top; }
-        .date { color:#FF6B35; font-weight:800; padding:6px 8px; font-size:14px; }
-        .note { color:#6b7280; font-size:14px; margin-top:12px; text-align:center; }
-        @media (max-width:640px){ .calendar td { height:48px; } .title{ font-size:22px; } }
+        .card { 
+          position:relative; 
+          background:linear-gradient(160deg,#ffffff,#fffaf3 92%); 
+          border-radius:22px; 
+          box-shadow:0 6px 24px -8px rgba(0,0,0,.12); 
+          padding:32px; 
+          border:1px solid #f3e2cc; 
+          overflow:hidden; 
+        }
+        .card:before { 
+          content:''; 
+          position:absolute; 
+          top:-60px; 
+          right:-60px; 
+          width:160px; 
+          height:160px; 
+          background:linear-gradient(135deg,rgba(242,131,0,0.3),rgba(255,157,77,0.35)); 
+          filter:blur(40px); 
+          opacity:.4; 
+        }
+        .title { 
+          color:#d97200; 
+          font-weight:800; 
+          font-size:30px; 
+          text-align:center; 
+          letter-spacing:.5px; 
+          position:relative; 
+        }
+        .subtitle { 
+          color:#8a5a15; 
+          text-align:center; 
+          font-weight:600; 
+        }
+        .calendar { 
+          width:100%; 
+          border-collapse:separate; 
+          border-spacing:0; 
+          margin-top:24px; 
+          border-radius:16px; 
+          overflow:hidden; 
+          box-shadow:0 4px 18px rgba(242,131,0,0.15); 
+        }
+        .calendar th { 
+          background:linear-gradient(135deg,#f28300,#ff9d4d); 
+          color:#fff; 
+          padding:14px; 
+          text-align:center; 
+          font-weight:800; 
+          letter-spacing:.5px; 
+        }
+        .calendar td { 
+          width:14.285%; 
+          height:70px; 
+          border:1px solid #f0e6d8; 
+          background:linear-gradient(160deg,#ffffff,#fffbf5); 
+          vertical-align:top; 
+          transition:all .3s; 
+          position:relative; 
+        }
+        .calendar td:hover { 
+          background:linear-gradient(145deg,#fff5e6,#ffe4cc); 
+          transform:scale(1.05); 
+          box-shadow:0 4px 14px rgba(242,131,0,0.25); 
+          z-index:10; 
+        }
+        .date { 
+          color:#f28300; 
+          font-weight:800; 
+          padding:8px 10px; 
+          font-size:15px; 
+        }
+        .note { 
+          color:#8a5a15; 
+          font-size:14px; 
+          margin-top:20px; 
+          text-align:center; 
+          font-weight:600; 
+        }
+        @media (max-width:640px){ 
+          .calendar td { height:52px; } 
+          .title{ font-size:24px; } 
+        }
       `}</style>
 
       <div className="card">

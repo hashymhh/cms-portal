@@ -14,13 +14,71 @@ const DateSheet = () => {
   return (
     <div className="space-y-4">
       <style>{`
-        .orange-header { background:#FF6B35; color:#fff; padding:18px 24px; border-radius:16px; font-weight:700; font-size:28px; }
-        .panel { background:#FFA752; padding:18px; border-radius:18px; }
-        .pill { background:#FFE9C7; color:#FF6B35; text-align:center; padding:16px; border-radius:14px; font-weight:800; font-size:20px; }
-        .table { width:100%; border-collapse: collapse; background:#fff; border-radius:12px; overflow:hidden; }
-        .table th { background:#FF6B35; color:#fff; text-align:left; padding:12px; font-weight:700; }
-        .table td { padding:12px; border-bottom:1px solid #f0f0f0; color:#374151; }
-        .note { color:#6b7280; font-size:14px; }
+        .orange-header { 
+          position:relative; 
+          background:linear-gradient(135deg,#f28300,#ff9d4d); 
+          color:#fff; 
+          padding:28px 40px; 
+          border-radius:20px; 
+          font-weight:700; 
+          font-size:30px; 
+          box-shadow:0 6px 28px -6px rgba(242,131,0,0.45),0 2px 6px rgba(0,0,0,0.08); 
+          overflow:hidden; 
+        }
+        .orange-header:after { 
+          content:''; 
+          position:absolute; 
+          inset:0; 
+          background:radial-gradient(circle at 85% 25%, rgba(255,255,255,0.35), transparent 60%); 
+          pointer-events:none; 
+        }
+        .panel { 
+          background:linear-gradient(145deg,#fff7ee,#ffe9d1); 
+          padding:32px; 
+          border-radius:22px; 
+          border:1px solid #ffe0c2; 
+          box-shadow:0 4px 20px -6px rgba(242,131,0,0.2); 
+        }
+        .pill { 
+          background:linear-gradient(135deg,#fff2d9,#ffe4cc); 
+          color:#d97200; 
+          text-align:center; 
+          padding:20px; 
+          border-radius:16px; 
+          font-weight:800; 
+          font-size:20px; 
+          box-shadow:0 4px 16px rgba(242,131,0,0.2); 
+          border:1px solid #ffe0c2; 
+        }
+        .table { 
+          width:100%; 
+          border-collapse:collapse; 
+          background:linear-gradient(160deg,#ffffff,#fffaf3); 
+          border-radius:16px; 
+          overflow:hidden; 
+          box-shadow:0 6px 22px -8px rgba(0,0,0,.12); 
+          border:1px solid #f3e2cc; 
+        }
+        .table th { 
+          background:linear-gradient(135deg,#f28300,#ff9d4d); 
+          color:#fff; 
+          text-align:left; 
+          padding:16px; 
+          font-weight:700; 
+          letter-spacing:.3px; 
+        }
+        .table td { 
+          padding:14px 16px; 
+          border-bottom:1px solid #f0e6d8; 
+          color:#374151; 
+          font-weight:500; 
+        }
+        .note { 
+          color:#8a5a15; 
+          font-size:14px; 
+          font-weight:600; 
+          text-align:center; 
+        }
       `}</style>
 
       <div className="orange-header">

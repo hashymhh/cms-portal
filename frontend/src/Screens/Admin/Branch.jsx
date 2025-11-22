@@ -194,34 +194,148 @@ const Branch = () => {
 
         {/* Metrics */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-5">
-          <div className="bg-white border rounded-lg p-5 shadow-sm">
-            <div className="text-sm text-gray-500">Total Departments</div>
-            <div className="text-2xl font-semibold text-[#ff7a00] mt-2">{branch?.length ?? 0}</div>
+          <style>{`
+            .metric-card { 
+              position:relative; 
+              background:linear-gradient(160deg,#ffffff,#fffaf3); 
+              border:1px solid #f3e2cc; 
+              border-radius:14px; 
+              padding:20px; 
+              box-shadow:0 4px 16px rgba(0,0,0,0.08); 
+              overflow:hidden; 
+              transition:all .3s; 
+            }
+            .metric-card:before { 
+              content:''; 
+              position:absolute; 
+              top:-30px; 
+              right:-30px; 
+              width:80px; 
+              height:80px; 
+              background:linear-gradient(135deg,rgba(242,131,0,0.2),rgba(255,157,77,0.25)); 
+              filter:blur(25px); 
+              opacity:.5; 
+            }
+            .metric-card:hover { 
+              transform:translateY(-4px); 
+              box-shadow:0 8px 24px rgba(242,131,0,0.2); 
+            }
+            .metric-label { 
+              font-size:13px; 
+              color:#8a5a15; 
+              font-weight:600; 
+              position:relative; 
+            }
+            .metric-value { 
+              font-size:28px; 
+              font-weight:700; 
+              color:#f28300; 
+              margin-top:8px; 
+              position:relative; 
+            }
+            .search-input { 
+              padding-left:40px; 
+              padding-top:8px; 
+              padding-bottom:8px; 
+              padding-right:16px; 
+              border-radius:12px; 
+              border:2px solid #f3e2cc; 
+              background:linear-gradient(160deg,#ffffff,#fffbf5); 
+              outline:none; 
+              font-size:14px; 
+              width:288px; 
+              transition:all .3s; 
+            }
+            .search-input:focus { 
+              border-color:#f28300; 
+              box-shadow:0 0 0 4px rgba(242,131,0,0.15); 
+            }
+            .search-icon { 
+              position:absolute; 
+              left:12px; 
+              top:50%; 
+              transform:translateY(-50%); 
+              color:#8a5a15; 
+            }
+            .departments-table { 
+              width:100%; 
+            }
+            .table-header { 
+              background:linear-gradient(145deg,#fff7ee,#ffe9d1); 
+              border:1px solid #ffe0c2; 
+              padding:16px; 
+              border-radius-top:12px; 
+            }
+            .table-title { 
+              font-weight:700; 
+              color:#2f2f2f; 
+              font-size:16px; 
+            }
+            .table-subtitle { 
+              font-size:12px; 
+              color:#8a5a15; 
+              margin-top:2px; 
+            }
+            .table-wrapper { 
+              background:#fff; 
+              border-radius-bottom:12px; 
+              box-shadow:0 6px 20px rgba(0,0,0,0.08); 
+              overflow:hidden; 
+            }
+            .departments-table thead tr { 
+              background:linear-gradient(135deg,#f28300,#ff9d4d); 
+            }
+            .departments-table th { 
+              padding:14px 16px; 
+              text-align:left; 
+              font-weight:700; 
+              color:#fff; 
+              letter-spacing:.3px; 
+              font-size:14px; 
+            }
+            .departments-table tbody tr { 
+              transition:all .3s; 
+            }
+            .departments-table tbody tr:hover { 
+              background:linear-gradient(145deg,#fff5e6,#ffe4cc); 
+              transform:scale(1.002); 
+            }
+            .departments-table td { 
+              padding:14px 16px; 
+              border-bottom:1px solid #f0e6d8; 
+              color:#374151; 
+              font-weight:500; 
+              font-size:14px; 
+            }
+          `}</style>
+          <div className="metric-card">
+            <div className="metric-label">Total Departments</div>
+            <div className="metric-value">{branch?.length ?? 0}</div>
           </div>
-          <div className="bg-white border rounded-lg p-5 shadow-sm">
-            <div className="text-sm text-gray-500">Total Faculty</div>
-            <div className="text-2xl font-semibold text-[#ff7a00] mt-2">{metrics.faculty}</div>
+          <div className="metric-card">
+            <div className="metric-label">Total Faculty</div>
+            <div className="metric-value">{metrics.faculty}</div>
           </div>
-          <div className="bg-white border rounded-lg p-5 shadow-sm">
-            <div className="text-sm text-gray-500">Total Students</div>
-            <div className="text-2xl font-semibold text-[#ff7a00] mt-2">{metrics.students}</div>
+          <div className="metric-card">
+            <div className="metric-label">Total Students</div>
+            <div className="metric-value">{metrics.students}</div>
           </div>
-          <div className="bg-white border rounded-lg p-5 shadow-sm">
-            <div className="text-sm text-gray-500">Total Courses</div>
-            <div className="text-2xl font-semibold text-[#ff7a00] mt-2">{metrics.courses}</div>
+          <div className="metric-card">
+            <div className="metric-label">Total Courses</div>
+            <div className="metric-value">{metrics.courses}</div>
           </div>
         </div>
 
         {/* Search and Export */}
         <div className="mt-4 flex items-center justify-between gap-3 flex-wrap">
           <div className="relative">
-            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <FiSearch className="search-icon" />
             <input
               type="text"
               placeholder="Search departments..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 rounded-lg border bg-white outline-none text-sm w-72"
+              className="search-input"
             />
           </div>
           <CustomButton onClick={exportCsv} className="!px-4 !py-2 flex items-center gap-2">
@@ -291,28 +405,28 @@ const Branch = () => {
 
       {!dataLoading && (
         <div className="mt-6 w-full">
-          <div className="bg-white rounded-t-lg border px-4 py-3">
-            <div className="font-semibold text-gray-800">Department List</div>
-            <div className="text-xs text-gray-500">Manage all departments and their resources</div>
+          <div className="table-header">
+            <div className="table-title">Department List</div>
+            <div className="table-subtitle">Manage all departments and their resources</div>
           </div>
-          <div className="overflow-x-auto bg-white rounded-b-lg shadow">
-            <table className="text-sm min-w-full">
+          <div className="table-wrapper">
+            <table className="text-sm departments-table">
               <thead>
-                <tr className="bg-[#ff7a00] text-white">
-                  <th className="py-3 px-4 text-left font-semibold">Department</th>
-                  <th className="py-3 px-4 text-left font-semibold">Code</th>
-                  <th className="py-3 px-4 text-left font-semibold">Created</th>
-                  <th className="py-3 px-4 text-center font-semibold">Actions</th>
+                <tr>
+                  <th>Department</th>
+                  <th>Code</th>
+                  <th>Created</th>
+                  <th style={{textAlign:'center'}}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredBranches && filteredBranches.length > 0 ? (
                   filteredBranches.map((item, index) => (
-                      <tr key={item._id || index} className="border-b hover:bg-orange-50">
-                        <td className="py-3 px-4">{item.name}</td>
-                        <td className="py-3 px-4">{item.branchId}</td>
-                        <td className="py-3 px-4">{new Date(item.createdAt).toLocaleDateString()}</td>
-                        <td className="py-3 px-4 text-center">
+                      <tr key={item._id || index}>
+                        <td>{item.name}</td>
+                        <td>{item.branchId}</td>
+                        <td>{new Date(item.createdAt).toLocaleDateString()}</td>
+                        <td style={{textAlign:'center'}}>
                           <div className="inline-flex items-center gap-2">
                             <CustomButton variant="secondary" className="!p-2" onClick={() => editBranchHandler(item)}>
                               <MdEdit />

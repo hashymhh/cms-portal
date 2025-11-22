@@ -258,6 +258,39 @@ const Timetable = () => {
 
   return (
     <div className="w-full mx-auto mt-10 flex justify-center items-start flex-col mb-10 relative">
+      <style>{`
+        .timetable-table { 
+          width:100%; 
+          background:linear-gradient(160deg,#ffffff,#fffaf3); 
+          border-radius:16px; 
+          overflow:hidden; 
+          box-shadow:0 6px 22px -8px rgba(0,0,0,.12); 
+          border:1px solid #f3e2cc; 
+        }
+        .timetable-table thead tr { 
+          background:linear-gradient(135deg,#f28300,#ff9d4d); 
+          color:#fff; 
+        }
+        .timetable-table th { 
+          padding:16px 24px; 
+          text-align:left; 
+          font-weight:700; 
+          letter-spacing:.3px; 
+        }
+        .timetable-table td { 
+          padding:14px 24px; 
+          border-bottom:1px solid #f0e6d8; 
+          color:#374151; 
+          font-weight:500; 
+        }
+        .timetable-table tbody tr { 
+          transition:all .3s; 
+        }
+        .timetable-table tbody tr:hover { 
+          background:linear-gradient(145deg,#fff5e6,#ffe4cc); 
+          transform:scale(1.005); 
+        }
+      `}</style>
       <div className="flex justify-between items-center w-full">
         <Heading title="Timetable Management" />
         <CustomButton onClick={() => setShowAddModal(true)}>
@@ -266,20 +299,20 @@ const Timetable = () => {
       </div>
 
       <div className="mt-8 w-full">
-        <table className="text-sm min-w-full bg-white">
+        <table className="text-sm timetable-table">
           <thead>
-            <tr className="bg-blue-500 text-white">
-              <th className="py-4 px-6 text-left font-semibold">View</th>
-              <th className="py-4 px-6 text-left font-semibold">Branch</th>
-              <th className="py-4 px-6 text-left font-semibold">Semester</th>
-              <th className="py-4 px-6 text-left font-semibold">Created At</th>
-              <th className="py-4 px-6 text-center font-semibold">Actions</th>
+            <tr>
+              <th>View</th>
+              <th>Branch</th>
+              <th>Semester</th>
+              <th>Created At</th>
+              <th className="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
             {timetables.map((item, index) => (
-              <tr key={index} className="border-b hover:bg-blue-50">
-                <td className="py-4 px-6">
+              <tr key={index}>
+                <td>
                   <a
                     className="text-xl"
                     href={process.env.REACT_APP_MEDIA_LINK + "/" + item.link}
@@ -289,12 +322,12 @@ const Timetable = () => {
                     <MdLink />
                   </a>
                 </td>
-                <td className="py-4 px-6">{item.branch.name}</td>
-                <td className="py-4 px-6">{item.semester}</td>
-                <td className="py-4 px-6">
+                <td>{item.branch.name}</td>
+                <td>{item.semester}</td>
+                <td>
                   {new Date(item.createdAt).toLocaleDateString()}
                 </td>
-                <td className="py-4 px-6 text-center flex justify-center gap-4">
+                <td className="text-center flex justify-center gap-4">
                   <CustomButton
                     variant="secondary"
                     onClick={() => editTimetableHandler(item)}

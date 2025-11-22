@@ -10,56 +10,57 @@ import Timetable from "./Timetable";
 import Material from "./Material";
 import Exam from "../Exam";
 import { useNavigate, useLocation } from "react-router-dom";
+import CoordinatorIcons from "../../components/CoordinatorIcons";
 
-// Coordinator panel modules with emoji icons matching admin panel style
+// Coordinator panel modules with professional SVG icons
 const MENU_ITEMS = [
   { 
     id: "dashboard", 
     label: "Dashboard", 
     component: Profile,
-    icon: "🏠"
+    icon: <CoordinatorIcons.Dashboard />
   },
   { 
     id: "attendance", 
     label: "Attendance", 
     component: Profile,
-    icon: "📋"
+    icon: <CoordinatorIcons.Attendance />
   },
   { 
     id: "marks", 
     label: "Marks Management", 
     component: Exam,
-    icon: "📊"
+    icon: <CoordinatorIcons.Marks />
   },
   { 
     id: "announcements", 
     label: "Announcements", 
     component: Notice,
-    icon: "📢"
+    icon: <CoordinatorIcons.Announcements />
   },
   { 
     id: "schedule", 
     label: "Class Schedule", 
     component: Timetable,
-    icon: "📅"
+    icon: <CoordinatorIcons.Schedule />
   },
   { 
     id: "feedback", 
     label: "Feedback & Tickets", 
     component: Material,
-    icon: "💬"
+    icon: <CoordinatorIcons.Feedback />
   },
   { 
     id: "audit", 
     label: "Audit Log", 
     component: Material,
-    icon: "📝"
+    icon: <CoordinatorIcons.AuditLog />
   },
   { 
     id: "settings", 
     label: "Settings", 
     component: Profile,
-    icon: "⚙️"
+    icon: <CoordinatorIcons.Settings />
   },
 ];
 
@@ -2629,9 +2630,11 @@ const Home = () => {
           <div className="coordinator-topbar-icon" title="Notifications">
             🔔
           </div>
-          <div className="coordinator-topbar-icon" onClick={handleLogout} title="Profile">
-            <div className="avatar-circle" style={{width:36,height:36, background:'#fff', color:'#f28300', fontWeight:700, display:'flex', alignItems:'center', justifyContent:'center'}}> {profileData?.firstName?.charAt(0)?.toUpperCase() || 'C'}</div>
-          </div>
+            <div className="coordinator-topbar-icon" title="Logout" onClick={handleLogout}>
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H10C11.1 21 12 20.1 12 19V17H10V19H5V5H10V7H12V5C12 3.9 11.1 3 10 3ZM14 8L12.59 9.41L14.17 11H8V13H14.17L12.59 14.59L14 16L18 12L14 8Z"/>
+              </svg>
+            </div>
         </div>
       </div>
 

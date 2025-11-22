@@ -268,6 +268,46 @@ const Faculty = () => {
 
   return (
     <div className="w-full mx-auto mt-10 flex justify-center items-start flex-col mb-10 relative">
+      <style>{`
+        .faculty-table { 
+          width:100%; 
+          background:linear-gradient(160deg,#ffffff,#fffaf3); 
+          border-radius:16px; 
+          overflow:hidden; 
+          box-shadow:0 6px 22px -8px rgba(0,0,0,.12); 
+          border:1px solid #f3e2cc; 
+        }
+        .faculty-table thead tr { 
+          background:linear-gradient(135deg,#f28300,#ff9d4d); 
+          color:#fff; 
+        }
+        .faculty-table th { 
+          padding:16px 24px; 
+          text-align:left; 
+          font-weight:700; 
+          letter-spacing:.3px; 
+        }
+        .faculty-table td { 
+          padding:14px 24px; 
+          border-bottom:1px solid #f0e6d8; 
+          color:#374151; 
+          font-weight:500; 
+        }
+        .faculty-table tbody tr { 
+          transition:all .3s; 
+        }
+        .faculty-table tbody tr:hover { 
+          background:linear-gradient(145deg,#fff5e6,#ffe4cc); 
+          transform:scale(1.005); 
+        }
+        .empty-state { 
+          text-align:center; 
+          padding:40px 24px; 
+          color:#8a5a15; 
+          font-weight:600; 
+          font-size:16px; 
+        }
+      `}</style>
       <div className="flex justify-between items-center w-full">
         <Heading title="Faculty Management" />
         <CustomButton
@@ -648,51 +688,49 @@ const Faculty = () => {
 
       {!dataLoading && !showAddForm && (
         <div className="mt-8 w-full">
-          <table className="text-sm min-w-full bg-white">
+          <table className="text-sm faculty-table">
             <thead>
-              <tr className="bg-blue-500 text-white">
-                <th className="py-4 px-6 text-left font-semibold">Name</th>
-                <th className="py-4 px-6 text-left font-semibold">Email</th>
-                <th className="py-4 px-6 text-left font-semibold">Phone</th>
-                <th className="py-4 px-6 text-left font-semibold">
-                  Employee ID
-                </th>
-                <th className="py-4 px-6 text-left font-semibold">
-                  Designation
-                </th>
-                <th className="py-4 px-6 text-center font-semibold">Actions</th>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Employee ID</th>
+                <th>Designation</th>
+                <th style={{textAlign:'center'}}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {faculty && faculty.length > 0 ? (
                 faculty.map((item, index) => (
-                  <tr key={index} className="border-b hover:bg-blue-50">
-                    <td className="py-4 px-6">{`${item.firstName} ${item.lastName}`}</td>
-                    <td className="py-4 px-6">{item.email}</td>
-                    <td className="py-4 px-6">{item.phone}</td>
-                    <td className="py-4 px-6">{item.employeeId}</td>
-                    <td className="py-4 px-6">{item.designation}</td>
-                    <td className="py-4 px-6 text-center flex justify-center gap-4">
-                      <CustomButton
-                        variant="secondary"
-                        className="!p-2"
-                        onClick={() => editFacultyHandler(item)}
-                      >
-                        <MdEdit />
-                      </CustomButton>
-                      <CustomButton
-                        variant="danger"
-                        className="!p-2"
-                        onClick={() => deleteFacultyHandler(item._id)}
-                      >
-                        <MdOutlineDelete />
-                      </CustomButton>
+                  <tr key={index}>
+                    <td>{`${item.firstName} ${item.lastName}`}</td>
+                    <td>{item.email}</td>
+                    <td>{item.phone}</td>
+                    <td>{item.employeeId}</td>
+                    <td>{item.designation}</td>
+                    <td style={{textAlign:'center'}}>
+                      <div className="flex justify-center gap-4">
+                        <CustomButton
+                          variant="secondary"
+                          className="!p-2"
+                          onClick={() => editFacultyHandler(item)}
+                        >
+                          <MdEdit />
+                        </CustomButton>
+                        <CustomButton
+                          variant="danger"
+                          className="!p-2"
+                          onClick={() => deleteFacultyHandler(item._id)}
+                        >
+                          <MdOutlineDelete />
+                        </CustomButton>
+                      </div>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="text-center text-base pt-10">
+                  <td colSpan="6" className="empty-state">
                     No Faculty found.
                   </td>
                 </tr>
